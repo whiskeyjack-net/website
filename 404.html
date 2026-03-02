@@ -1,32 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Whiskeyjack.net - A collection of apps and utilities for everyday use." />
-    <meta name="author" content="Whiskeyjack" />
-    <meta property="og:title" content="Whiskeyjack.net" />
-    <meta property="og:description" content="A collection of apps and utilities for everyday use." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://whiskeyjack.net" />
-    <meta property="og:image" content="https://whiskeyjack.net/og-image.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Whiskeyjack.net" />
-    <meta name="twitter:description" content="A collection of apps and utilities for everyday use." />
-    <meta name="twitter:image" content="https://whiskeyjack.net/og-image.jpg" />
-    <link rel="canonical" href="https://whiskeyjack.net" />
-    <meta name="theme-color" content="#f4f1ea" />
-    <title>Whiskeyjack.net</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-DNsJgIiO.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CiAMvCAv.css">
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      // GitHub Pages SPA redirect for multi-app monorepo
+      // Detects which app a deep-link belongs to and redirects to
+      // the app root, preserving the full path via sessionStorage.
+      var path = window.location.pathname;
+      var apps = ['pritenzo', 'glucky', 'chip-away', 'icon-stack'];
+      var matched = false;
+
+      for (var i = 0; i < apps.length; i++) {
+        if (path.startsWith('/' + apps[i] + '/')) {
+          sessionStorage.setItem('spa-redirect', path + window.location.search);
+          window.location.replace('/' + apps[i] + '/');
+          matched = true;
+          break;
+        }
+      }
+
+      // Website SPA routes — redirect to root and let React Router handle them
+      if (!matched) {
+        sessionStorage.setItem('spa-redirect', path + window.location.search);
+        window.location.replace('/');
+      }
+    </script>
   </head>
-  <body>
-    <div id="root"></div>
-  </body>
+  <body></body>
 </html>
