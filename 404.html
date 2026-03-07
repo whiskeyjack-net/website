@@ -20,7 +20,7 @@
         }
       }
 
-      // Website SPA routes — redirect to root and let React Router handle them
+      // Website SPA routes – redirect to root and let React Router handle them
       if (!matched) {
         sessionStorage.setItem('spa-redirect', path + window.location.search);
         window.location.replace('/');
