@@ -35,17 +35,29 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .error { color: #c00; }
     .success { color: #2a7; }
+    .btn {
+      display: none;
+      margin-top: 1.25rem;
+      padding: 0.75rem 1.5rem;
+      background: #1e90ff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="spinner" id="spinner"></div>
     <p id="status">Signing you in...</p>
+    <a id="open-app" class="btn" href="#">Return to Chip Away</a>
   </div>
   <script>
     (function () {
       var status = document.getElementById('status');
       var spinner = document.getElementById('spinner');
+      var openBtn = document.getElementById('open-app');
 
       // Google OAuth implicit flow returns params in the hash fragment
       var hash = window.location.hash.substring(1);
@@ -62,16 +74,24 @@
         return;
       }
 
-      // Redirect to the deep link so the Tauri app picks it up
       var deepLink = 'chipaway://auth?id_token=' + encodeURIComponent(idToken);
+
+      // Always surface a tappable link. iOS Safari blocks programmatic
+      // navigation to a custom URL scheme without a user gesture, so the
+      // auto-redirect below silently fails there -- the button lets the user
+      // complete the hand-off with a tap. On Android/desktop the auto-redirect
+      // fires first and the button is never needed.
+      openBtn.href = deepLink;
+      openBtn.style.display = 'inline-block';
+
+      // Attempt the automatic hand-off (works on Android and desktop).
       window.location.href = deepLink;
 
-      // Show success message (visible if the redirect doesn't navigate away)
       setTimeout(function () {
         spinner.style.display = 'none';
         status.className = 'success';
-        status.textContent = 'Signed in! You can close this tab and return to Chip Away.';
-      }, 1000);
+        status.textContent = 'Almost there -- tap below to return to Chip Away.';
+      }, 800);
     })();
   </script>
 </body>
