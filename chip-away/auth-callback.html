@@ -65,9 +65,10 @@
       var idToken = params.get('id_token');
 
       if (!idToken) {
-        // Also check query params (in case of error responses)
+        // Errors arrive in the fragment (Apple, response_mode=fragment) or
+        // the query string (Google).
         var query = new URLSearchParams(window.location.search);
-        var error = query.get('error') || 'No authentication token received.';
+        var error = params.get('error') || query.get('error') || 'No authentication token received.';
         spinner.style.display = 'none';
         status.className = 'error';
         status.textContent = 'Sign-in failed: ' + error;
@@ -75,6 +76,14 @@
       }
 
       var deepLink = 'chipaway://auth?id_token=' + encodeURIComponent(idToken);
+
+      // Apple sign-in (system-browser flow) tags its request state with an
+      // "apple-" prefix; pass provider + state through so the app completes
+      // with the right credential type and can match its stashed nonce.
+      var state = params.get('state');
+      if (state && state.indexOf('apple-') === 0) {
+        deepLink += '&provider=apple&state=' + encodeURIComponent(state);
+      }
 
       // Always surface a tappable link. iOS Safari blocks programmatic
       // navigation to a custom URL scheme without a user gesture, so the
