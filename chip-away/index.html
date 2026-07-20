@@ -26,8 +26,30 @@
     <title>Chip Away</title>
     <!-- Inter is self-hosted via @fontsource-variable/inter (imported in
          main.tsx) -- no Google Fonts CDN, so it loads instantly and offline. -->
-    <script type="module" crossorigin src="/chip-away/assets/index-D836WiiG.js"></script>
-    <link rel="stylesheet" crossorigin href="/chip-away/assets/index-iq6jUIjH.css">
+    <!-- Pre-paint the theme so the correct background is up on the FIRST frame,
+         with no light->dark recolor while the DB (and the Layout effect that
+         reads it) resolve. Reads the theme the Layout mirrors to localStorage on
+         this device; a fresh install (no mirror) falls back to the OS setting,
+         which matches the app's default 'system' theme. The Layout re-applies
+         the same classes idempotently once settings load. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('chipAwayTheme'); // 'light' | 'dark' | 'oled'
+          var dark = t ? (t === 'dark' || t === 'oled')
+                       : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var oled = t === 'oled';
+          var el = document.documentElement;
+          if (dark) el.classList.add('dark');
+          if (oled) el.classList.add('extra-dark');
+          var color = dark ? (oled ? '#000000' : '#1d1d1d') : '#f4f1ea';
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', color);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/chip-away/assets/index-Dl93Ywxv.js"></script>
+    <link rel="stylesheet" crossorigin href="/chip-away/assets/index-dHm1nfi3.css">
   <link rel="manifest" href="/chip-away/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/chip-away/registerSW.js"></script></head>
   <body>
     <script>!function(){var r=sessionStorage.getItem('spa-redirect');if(r){sessionStorage.removeItem('spa-redirect');history.replaceState(null,'',r)}}()</script>
