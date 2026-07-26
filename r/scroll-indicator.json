@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scroll-indicator",
+  "type": "registry:ui",
+  "registryDependencies": [
+    "https://whiskeyjack.net/r/use-scroll-indicator.json",
+    "https://whiskeyjack.net/r/utils.json"
+  ],
+  "files": [
+    {
+      "path": "components/ui/scroll-indicator.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/scroll-indicator.tsx",
+      "content": "import * as React from 'react'\nimport { cn } from '@/lib/utils'\nimport { useScrollIndicator } from '@/hooks/use-scroll-indicator'\n\nexport interface ScrollIndicatorProps {\n  /** The scroll container to track. */\n  scrollRef: React.RefObject<HTMLElement>\n  /**\n   * Pixels from the top of the positioned parent where the track starts.\n   * Set it to the height of whatever floats over the scroller's top edge\n   * (a frosted header) plus a small gap, so the thumb never runs behind it.\n   */\n  topOffset?: number\n  /** Pixels from the bottom of the positioned parent. */\n  bottomOffset?: number\n  /**\n   * Hide the indicator below the `md` breakpoint (default true) -- page-level\n   * scrollers keep the platform's overlay scrollbars on mobile. Pass false\n   * for surfaces that hide their native scrollbar at every size (drawers).\n   */\n  hideBelowMd?: boolean\n  className?: string\n}\n\n/**\n * Custom auto-hiding scroll indicator. Renders inside a `relative` parent\n * that wraps (or contains) the scroll container, replacing a native\n * scrollbar that would otherwise run behind floating/sticky chrome. Pair it\n * with `.scrollbar-hide` on the scroll container. Purely visual:\n * pointer-events-none and hidden from assistive tech.\n */\nexport const ScrollIndicator = React.forwardRef<HTMLDivElement, ScrollIndicatorProps>(function ScrollIndicator({\n  scrollRef,\n  topOffset = 8,\n  bottomOffset = 8,\n  hideBelowMd = true,\n  className,\n}, ref) {\n  const { thumbHeightPct, thumbTopPct, visible, hasOverflow } = useScrollIndicator(scrollRef)\n  if (!hasOverflow) return null\n\n  return (\n    <div\n      ref={ref}\n      aria-hidden=\"true\"\n      className={cn(\n        // Logical inset: inline-end puts the track on the left in RTL locales,\n        // matching where native scrollbars sit there.\n        'absolute end-1 z-40 pointer-events-none',\n        hideBelowMd && 'hidden md:block',\n        className,\n      )}\n      style={{ top: topOffset, bottom: bottomOffset, width: 6 }}\n    >\n      <div\n        className=\"absolute end-0 w-1 rounded-full bg-[var(--color-neutral-400)] dark:bg-[var(--color-neutral-500)] transition-opacity duration-300\"\n        style={{\n          height: `${thumbHeightPct}%`,\n          top: `${thumbTopPct}%`,\n          minHeight: 24,\n          opacity: visible ? 0.6 : 0,\n        }}\n      />\n    </div>\n  )\n})\n\nScrollIndicator.displayName = 'ScrollIndicator'\n"
+    }
+  ]
+}

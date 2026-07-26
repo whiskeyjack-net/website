@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "direction",
+  "type": "registry:lib",
+  "files": [
+    {
+      "path": "lib/direction.ts",
+      "type": "registry:lib",
+      "target": "lib/direction.ts",
+      "content": "/**\n * Reading direction helper for the JS-driven interactions that CSS logical\n * properties can't reach on their own -- swipe-to-navigate and the horizontal\n * fade-edge masks. CSS handles the rest (logical `start`/`end` utilities).\n *\n * Prefers the computed `direction` (so a CSS-set direction is honoured), and\n * falls back to the nearest `[dir]` attribute when computed style is\n * unavailable (e.g. jsdom in tests, or a detached node). The apps set\n * `<html dir=\"rtl\">` via the i18n bootstrap, so the attribute path is the\n * common one in this repo.\n */\nexport function isRTL(el?: Element | null): boolean {\n  if (typeof document === \"undefined\") return false;\n  const target = el ?? document.documentElement;\n  const computed =\n    typeof getComputedStyle === \"function\" ? getComputedStyle(target).direction : \"\";\n  if (computed === \"rtl\") return true;\n  if (computed === \"ltr\") return false;\n  const dirEl = target.closest?.(\"[dir]\") ?? document.documentElement;\n  return dirEl.getAttribute(\"dir\") === \"rtl\";\n}\n"
+    }
+  ]
+}

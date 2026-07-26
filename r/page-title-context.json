@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "page-title-context",
+  "type": "registry:ui",
+  "files": [
+    {
+      "path": "components/ui/page-title-context.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/page-title-context.tsx",
+      "content": "import { createContext, useContext, useState, type ReactNode } from 'react'\n\ninterface PageTitleContextType {\n  title: ReactNode\n  setTitle: (title: ReactNode) => void\n}\n\nconst PageTitleContext = createContext<PageTitleContextType>({\n  title: null,\n  setTitle: () => {},\n})\n\nexport function PageTitleProvider({ children }: { children: ReactNode }) {\n  const [title, setTitle] = useState<ReactNode>(null)\n\n  return (\n    <PageTitleContext.Provider value={{ title, setTitle }}>\n      {children}\n    </PageTitleContext.Provider>\n  )\n}\n\nexport function usePageTitle() {\n  return useContext(PageTitleContext)\n}\n"
+    }
+  ]
+}

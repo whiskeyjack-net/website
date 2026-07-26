@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-input-type",
+  "type": "registry:hook",
+  "files": [
+    {
+      "path": "hooks/use-input-type.ts",
+      "type": "registry:hook",
+      "target": "hooks/use-input-type.ts",
+      "content": "import { useEffect, useState } from 'react'\n\nexport type InputType = 'touch' | 'mouse'\n\n/**\n * Detects whether the user's primary input is touch or mouse, via the\n * `(hover: hover)` media query. Hybrid devices (touchscreen laptops) are\n * reported as `'mouse'` -- the query reflects the primary input method.\n *\n * Use this to swap wording like \"Tap again\" vs \"Click again\" in inline\n * confirmation buttons, or to toggle interaction patterns that differ\n * by input modality.\n *\n * Reactive: updates on the rare media-query change (e.g. a tablet\n * docked to a keyboard).\n */\nexport function useInputType(): InputType {\n  const [type, setType] = useState<InputType>(() => {\n    if (typeof window === 'undefined') return 'mouse'\n    return window.matchMedia('(hover: hover)').matches ? 'mouse' : 'touch'\n  })\n\n  useEffect(() => {\n    const mq = window.matchMedia('(hover: hover)')\n    const handler = (e: MediaQueryListEvent) => setType(e.matches ? 'mouse' : 'touch')\n    mq.addEventListener('change', handler)\n    return () => mq.removeEventListener('change', handler)\n  }, [])\n\n  return type\n}\n"
+    }
+  ]
+}

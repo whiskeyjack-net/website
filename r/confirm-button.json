@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "confirm-button",
+  "type": "registry:ui",
+  "registryDependencies": [
+    "https://whiskeyjack.net/r/announce.json",
+    "https://whiskeyjack.net/r/button.json",
+    "https://whiskeyjack.net/r/use-input-type.json"
+  ],
+  "files": [
+    {
+      "path": "components/ui/confirm-button.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/confirm-button.tsx",
+      "content": "import * as React from 'react'\nimport { Button, type ButtonProps } from '@/components/ui/button'\nimport { useInputType } from '@/hooks/use-input-type'\nimport { announce } from '@/lib/announce'\n\nexport interface ConfirmButtonProps\n  extends Omit<ButtonProps, 'variant' | 'onClick' | 'children'> {\n  /** Label shown in the default (un-armed) state. */\n  label: string\n  /**\n   * Label shown after the first tap/click arms the button (touch input).\n   * Typically the translated form of \"Tap again to confirm\".\n   */\n  touchConfirmLabel: string\n  /**\n   * Label shown after the first click arms the button (mouse/keyboard input).\n   * Typically the translated form of \"Click again to confirm\".\n   */\n  mouseConfirmLabel: string\n  /** Called only when the button is tapped/clicked a second time while armed. */\n  onConfirm: () => void\n  /**\n   * Controls the armed state from outside, e.g. to reset it when a drawer\n   * closes. When provided the component is controlled; when omitted it manages\n   * its own state.\n   */\n  armed?: boolean\n  /** Called when the internal armed state changes (controlled usage). */\n  onArmedChange?: (armed: boolean) => void\n}\n\n/**\n * Destructive action button with a tap-again-to-confirm pattern.\n *\n * Tap/click once to arm it (label switches to confirm prompt). Tap/click again\n * to execute `onConfirm`. The armed state is managed internally unless you pass\n * `armed` + `onArmedChange` for controlled usage (e.g., to reset it when the\n * enclosing drawer closes).\n *\n * Input type detection via `useInputType` automatically picks between\n * `touchConfirmLabel` and `mouseConfirmLabel`.\n *\n * Built on the DS `Button` with `variant=\"destructive\"`.\n */\nexport const ConfirmButton = React.forwardRef<HTMLButtonElement, ConfirmButtonProps>(function ConfirmButton({\n  label,\n  touchConfirmLabel,\n  mouseConfirmLabel,\n  onConfirm,\n  armed: controlledArmed,\n  onArmedChange,\n  ...rest\n}, ref) {\n  const inputType = useInputType()\n  const [internalArmed, setInternalArmed] = React.useState(false)\n\n  const isControlled = controlledArmed !== undefined\n  const armed = isControlled ? controlledArmed : internalArmed\n\n  const setArmed = React.useCallback(\n    (next: boolean) => {\n      if (!isControlled) setInternalArmed(next)\n      onArmedChange?.(next)\n    },\n    [isControlled, onArmedChange]\n  )\n\n  const confirmLabel =\n    inputType === 'touch' ? touchConfirmLabel : mouseConfirmLabel\n\n  const handleClick = () => {\n    if (armed) {\n      onConfirm()\n      setArmed(false)\n    } else {\n      setArmed(true)\n      // Announce the confirm prompt assertively so screen-reader users know\n      // the next activation will execute the destructive action.\n      announce(confirmLabel, 'assertive')\n    }\n  }\n\n  return (\n    <Button ref={ref} variant=\"destructive\" onClick={handleClick} {...rest}>\n      {armed ? confirmLabel : label}\n    </Button>\n  )\n})\n\nConfirmButton.displayName = \"ConfirmButton\"\n"
+    }
+  ]
+}

@@ -1,0 +1,315 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "whiskeyjack",
+  "homepage": "https://whiskeyjack.net",
+  "items": [
+    {
+      "name": "action-pill",
+      "type": "registry:ui",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "app-shell",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/scroll-indicator.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "bottom-drawer",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/scroll-indicator.json",
+        "https://whiskeyjack.net/r/use-focus-trap.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "bottom-nav",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "button-row",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "calendar-heatmap",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "color-input",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "confirm-button",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/announce.json",
+        "https://whiskeyjack.net/r/button.json",
+        "https://whiskeyjack.net/r/use-input-type.json"
+      ]
+    },
+    {
+      "name": "drawer-action",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/announce.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/button.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "mobile-bottom-nav",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/use-focus-trap.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "notice",
+      "type": "registry:ui",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "page-title-context",
+      "type": "registry:ui"
+    },
+    {
+      "name": "progress-bar",
+      "type": "registry:ui",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/use-reduced-motion.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "pull-to-refresh-indicator",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "reorder-list",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/use-drag-reorder.json",
+        "https://whiskeyjack.net/r/use-reduced-motion.json",
+        "https://whiskeyjack.net/r/use-scroll-fade.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "scroll-indicator",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/use-scroll-indicator.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "sidebar-tabs",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/progress-bar.json",
+        "https://whiskeyjack.net/r/tab-bar.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "tab-bar",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/direction.json",
+        "https://whiskeyjack.net/r/progress-bar.json",
+        "https://whiskeyjack.net/r/use-reduced-motion.json",
+        "https://whiskeyjack.net/r/use-tab-bar-fade.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "toggle",
+      "type": "registry:ui",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ]
+    },
+    {
+      "name": "accent-foreground",
+      "type": "registry:lib"
+    },
+    {
+      "name": "announce",
+      "type": "registry:lib"
+    },
+    {
+      "name": "direction",
+      "type": "registry:lib"
+    },
+    {
+      "name": "merge-refs",
+      "type": "registry:lib"
+    },
+    {
+      "name": "use-drag-reorder",
+      "type": "registry:hook"
+    },
+    {
+      "name": "use-focus-trap",
+      "type": "registry:hook"
+    },
+    {
+      "name": "use-input-type",
+      "type": "registry:hook"
+    },
+    {
+      "name": "use-pull-to-refresh",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/announce.json"
+      ]
+    },
+    {
+      "name": "use-reduced-motion",
+      "type": "registry:hook"
+    },
+    {
+      "name": "use-route-focus",
+      "type": "registry:hook"
+    },
+    {
+      "name": "use-scroll-fade",
+      "type": "registry:hook"
+    },
+    {
+      "name": "use-scroll-indicator",
+      "type": "registry:hook"
+    },
+    {
+      "name": "use-swipe-navigation",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/direction.json",
+        "https://whiskeyjack.net/r/use-reduced-motion.json"
+      ]
+    },
+    {
+      "name": "use-tab-bar-fade",
+      "type": "registry:hook",
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/direction.json"
+      ]
+    },
+    {
+      "name": "use-theme",
+      "type": "registry:hook"
+    },
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    }
+  ]
+}

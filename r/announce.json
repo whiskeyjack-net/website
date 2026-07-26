@@ -1,0 +1,13 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "announce",
+  "type": "registry:lib",
+  "files": [
+    {
+      "path": "lib/announce.ts",
+      "type": "registry:lib",
+      "target": "lib/announce.ts",
+      "content": "/**\n * Announce a message to assistive technology via a shared, visually-hidden\n * ARIA live region. Use for status that has no visible text anchor of its own\n * -- route changes, async results, game-state transitions, timers.\n *\n * Two singleton regions are created lazily on `<body>` (one polite, one\n * assertive) and reused. The text is cleared and re-set on the next frame so\n * repeating the same message still re-announces.\n *\n * (Visible status that lives in a component should instead use that component's\n * own live semantics -- e.g. a `Notice`/`Toast` with an aria-live role.)\n */\nexport type Politeness = \"polite\" | \"assertive\";\n\nfunction getRegion(politeness: Politeness): HTMLElement {\n  const id = `wj-live-${politeness}`;\n  let region = document.getElementById(id);\n  if (!region) {\n    region = document.createElement(\"div\");\n    region.id = id;\n    region.className = \"wj-sr-only\";\n    region.setAttribute(\"aria-live\", politeness);\n    region.setAttribute(\"aria-atomic\", \"true\");\n    region.setAttribute(\"role\", politeness === \"assertive\" ? \"alert\" : \"status\");\n    document.body.appendChild(region);\n  }\n  return region;\n}\n\nexport function announce(message: string, politeness: Politeness = \"polite\"): void {\n  if (typeof document === \"undefined\") return;\n  const region = getRegion(politeness);\n  region.textContent = \"\";\n  // Re-set on the next frame so an identical consecutive message re-announces.\n  requestAnimationFrame(() => {\n    region.textContent = message;\n  });\n}\n"
+    }
+  ]
+}
