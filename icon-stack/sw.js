@@ -1,1 +1,40 @@
-if(!self.define){let e,i={};const n=(n,r)=>(n=new URL(n+".js",r).href,i[n]||new Promise(i=>{if("document"in self){const e=document.createElement("script");e.src=n,e.onload=i,document.head.appendChild(e)}else e=n,importScripts(n),i()}).then(()=>{let e=i[n];if(!e)throw new Error(`Module ${n} didn’t register its module`);return e}));self.define=(r,s)=>{const a=e||("document"in self?document.currentScript.src:"")||location.href;if(i[a])return;let l={};const o=e=>n(e,a),f={module:{uri:a},exports:l,require:o};i[a]=Promise.all(r.map(e=>f[e]||o(e))).then(e=>(s(...e),l))}}define(["./workbox-b20fbdff"],function(e){"use strict";self.skipWaiting(),e.clientsClaim(),e.precacheAndRoute([{url:"registerSW.js",revision:"29260c97bc2a75956d6a24e9beb07836"},{url:"pwa-maskable-512x512.png",revision:"951263b5a0dd19fb0599d8e22485276d"},{url:"pwa-maskable-192x192.png",revision:"5ad7ef19fe411afbfa8e0735d8018a14"},{url:"pwa-512x512.png",revision:"6b3c77cfe5605357ebf26daf8afc39a2"},{url:"pwa-192x192.png",revision:"ca0546ee5fc85c49597221a5d9d8ff1a"},{url:"index.html",revision:"1860719b35efd2acb2a840cf21995a2e"},{url:"favicon.ico",revision:"9281636777496e173c3782abb028345d"},{url:"apple-touch-icon.png",revision:"220e8a40fc70a083edb3518969b9a55d"},{url:"assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2",revision:null},{url:"assets/inter-latin-wght-normal-Dx4kXJAl.woff2",revision:null},{url:"assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2",revision:null},{url:"assets/inter-greek-wght-normal-CkhJZR-_.woff2",revision:null},{url:"assets/inter-greek-ext-wght-normal-DlzME5K_.woff2",revision:null},{url:"assets/inter-cyrillic-wght-normal-DqGufNeO.woff2",revision:null},{url:"assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2",revision:null},{url:"assets/index-DUU2yd-h.js",revision:null},{url:"assets/index-DA_IPQEg.css",revision:null},{url:"apple-touch-icon.png",revision:"220e8a40fc70a083edb3518969b9a55d"},{url:"favicon.ico",revision:"9281636777496e173c3782abb028345d"},{url:"pwa-192x192.png",revision:"ca0546ee5fc85c49597221a5d9d8ff1a"},{url:"pwa-512x512.png",revision:"6b3c77cfe5605357ebf26daf8afc39a2"},{url:"pwa-maskable-192x192.png",revision:"5ad7ef19fe411afbfa8e0735d8018a14"},{url:"pwa-maskable-512x512.png",revision:"951263b5a0dd19fb0599d8e22485276d"},{url:"manifest.webmanifest",revision:"c5a75b49d2040546de46b9f01b5d899a"}],{}),e.cleanupOutdatedCaches(),e.registerRoute(new e.NavigationRoute(e.createHandlerBoundToURL("index.html")))});
+/**
+ * Tombstone service worker.
+ *
+ * Icon Stack used to be a PWA (vite-plugin-pwa, registerType: 'autoUpdate').
+ * The rebuilt app is not, and registers no service worker -- but a worker
+ * already installed on a device keeps running and keeps intercepting every
+ * request under /icon-stack/, serving its precache. The symptom is a page that
+ * looks empty on load and only fills in after a client-side navigation.
+ *
+ * Deleting sw.js is not enough: browsers only re-check the script on their own
+ * schedule, and behavior on a 404 varies. Serving a worker that unregisters
+ * itself is the reliable way to retire one. Browsers fetch this on their next
+ * update check, it takes control, drops every cache, unregisters, and reloads
+ * open clients onto the real network responses.
+ *
+ * Keep this file until it is safe to assume no device still holds the old
+ * worker. Removing it early leaves those devices stuck on a 2026-era precache.
+ */
+self.addEventListener('install', () => {
+  // Replace the outgoing worker immediately rather than waiting for every tab
+  // to close -- the whole point is to stop serving stale responses now.
+  self.skipWaiting()
+})
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      const names = await caches.keys()
+      await Promise.all(names.map((name) => caches.delete(name)))
+      await self.registration.unregister()
+
+      // Reload anything currently open so it re-fetches from the network.
+      const clients = await self.clients.matchAll({ type: 'window' })
+      for (const client of clients) client.navigate(client.url)
+    })(),
+  )
+})
+
+// Never answer a request from cache while winding down.
+self.addEventListener('fetch', () => {})
