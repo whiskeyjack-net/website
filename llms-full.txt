@@ -206,7 +206,7 @@ Centered icon tile, title, subtitle, and optional call to action for an empty li
 
 Exports: `EmptyState`
 
-Use it wherever a list, tab, or screen has no content yet: a first run, an empty search, a cleared history. The subtitle sets expectations and the optional CTA points at the obvious next step.
+Use it wherever a list, tab, or screen has no content yet: a first run, an empty search, a cleared history. The subtitle sets expectations and the call to action points at the obvious next step. `ctaLabel` + `onCta` is the shorthand and renders an accent Button; pass `action` instead when you need an icon in the button, a different variant, or a control that is not a button at all.
 
 #### PullToRefreshIndicator  `@whiskeyjack/pull-to-refresh-indicator`
 
