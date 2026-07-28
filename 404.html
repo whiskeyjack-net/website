@@ -8,6 +8,9 @@
       // Detects which app a deep-link belongs to and redirects to
       // the app root, preserving the full path via sessionStorage.
       var path = window.location.pathname;
+      // icon-stack is built and published from whiskeyjack-net/icon-stack,
+      // but it is served from this domain and relies on this handler for deep
+      // links just like the in-repo apps. Do not remove it.
       var apps = ['pritenzo', 'glucky', 'chip-away', 'icon-stack', 'buzz-board', 'uradi', 'fs-generator'];
       var matched = false;
 
