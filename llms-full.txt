@@ -140,7 +140,7 @@ Range input with an optional mono value readout beside its label.
 
 Exports: `Slider`
 
-The control for a value along a continuum: a target, a threshold, a volume. Pass min, max, and value/onChange; add formatValue for a live readout next to the label. It styles the native range thumb across browsers and exposes aria-valuetext.
+The control for a value along a continuum: a target, a threshold, a volume. It wraps a native range input, so `min`, `max` and `step` are passed straight through and do not appear in the props table below -- they arrive via the inherited input attributes. Add `formatValue` for a live readout next to the label. It styles the native thumb across browsers and exposes aria-valuetext.
 
 #### Toggle  `@whiskeyjack/toggle`
 
