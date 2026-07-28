@@ -2,6 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "page-title-context",
   "type": "registry:ui",
+  "title": "PageTitleProvider",
+  "description": "React context that lets any page set the desktop header title.",
+  "categories": [
+    "navigation"
+  ],
   "files": [
     {
       "path": "components/ui/page-title-context.tsx",
@@ -9,5 +14,17 @@
       "target": "components/ui/page-title-context.tsx",
       "content": "import { createContext, useContext, useState, type ReactNode } from 'react'\n\ninterface PageTitleContextType {\n  title: ReactNode\n  setTitle: (title: ReactNode) => void\n}\n\nconst PageTitleContext = createContext<PageTitleContextType>({\n  title: null,\n  setTitle: () => {},\n})\n\nexport function PageTitleProvider({ children }: { children: ReactNode }) {\n  const [title, setTitle] = useState<ReactNode>(null)\n\n  return (\n    <PageTitleContext.Provider value={{ title, setTitle }}>\n      {children}\n    </PageTitleContext.Provider>\n  )\n}\n\nexport function usePageTitle() {\n  return useContext(PageTitleContext)\n}\n"
     }
-  ]
+  ],
+  "docs": "Wrap the Layout root in PageTitleProvider, call setTitle(node) from a page, and read it back in the header. This is a context provider with no DOM root, so it does not forward a ref.",
+  "meta": {
+    "group": "navigation",
+    "related": [
+      "app-shell"
+    ],
+    "exports": [
+      "PageTitleProvider",
+      "usePageTitle"
+    ],
+    "siteSlug": "page-title-provider"
+  }
 }

@@ -1,0 +1,404 @@
+# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.5.0)
+
+A Tauri-first design system and design language: thumb-first components with
+Metro-style pivot navigation, built for small, offline-first personal apps that
+ship one web codebase to desktop and mobile via Tauri. Every component was
+hardened across a family of real, shipping apps before extraction.
+
+Homepage: https://whiskeyjack.net
+Registry: https://whiskeyjack.net/r/registry.json (namespace `@whiskeyjack`)
+
+## Install
+
+```bash
+npm install @whiskeyjack-net/design-system
+```
+
+Import components from the package, or copy their source into your own repo
+with the shadcn CLI:
+
+```bash
+npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.json
+npx shadcn@latest add @whiskeyjack/<name>
+```
+
+## Components, hooks and utilities (44)
+
+### Navigation & layout
+
+#### AppShell  `@whiskeyjack/app-shell`
+
+The app layout skeleton: a fixed-height shell or a document scroller, with a frosted header, nav pills, and the main scroll region.
+
+Exports: `AppShell`, `AppHeader`, `HeaderNav`, `AppMain`
+
+AppShell is the root. Use scroll="shell" for a fixed h-dvh column where only AppMain scrolls, or scroll="document" for a content site. AppHeader floats over the scrollers (variant="floating") or sits sticky in flow; a floating header means each scroller reserves md:pt-14 or md:pt-16 for its height. Tauri apps hang window controls off AppHeader's `chrome` slot.
+
+#### BottomNav  `@whiskeyjack/bottom-nav`
+
+Pill-shaped frosted bottom navigation, hand-composed from BottomNavItem and BottomNavAction.
+
+Exports: `BottomNav`, `BottomNavItem`, `BottomNavAction`
+
+BottomNav is the hand-composed bar: lay out the items and action yourself when you know they always fit. For a data-driven bar that collapses overflowing items into a hamburger, use MobileBottomNav instead.
+
+#### MobileBottomNav  `@whiskeyjack/mobile-bottom-nav`
+
+Data-driven bottom nav that collapses its items into a hamburger menu when they and the toolbar would overflow the viewport.
+
+Exports: `MobileBottomNav`
+
+Give it navItems plus a toolbar. It measures the worst case (every toolbar action visible) so the collapse decision stays stable across pages. Router- and icon-agnostic: pass linkComponent for `to` items and a per-item renderIcon. Mobile-only (md:hidden), so pair it with a desktop HeaderNav.
+
+#### TabBar  `@whiskeyjack/tab-bar`
+
+Metro-style pivot tabs with a sliding accent underline that doubles as each tab's progress bar.
+
+Exports: `TabBar`
+
+Reach for TabBar when an app has parallel surfaces a thumb should flick between. Always pair it with useSwipeNavigation so the content swipes too. Give a tab a `progress` value when it tracks completion and the underline carries it; omit it for tabs with no progress concept. Place it as a direct child of the page scroll container.
+
+#### SidebarTabs  `@whiskeyjack/sidebar-tabs`
+
+TabBar's wide-layout counterpart: a vertical tab rail for a desktop sidebar, with each item's progress pinned to its bottom edge.
+
+Exports: `SidebarTabs`
+
+Feed SidebarTabs the same items, activeId, and onSelect as your TabBar, then show one at a time: portal this into the sidebar for xl+ layouts while hiding the horizontal TabBar with lg:hidden. Arrow keys, Home, and End move between items.
+
+#### ActionPill  `@whiskeyjack/action-pill`
+
+Toolbar pill of icon actions that collapse and grow as the page's context changes.
+
+Exports: `ActionPill`, `ActionPillButton`, `ActionPillStaticButton`
+
+Contextual actions (ActionPillButton) collapse away when they do not apply; the primary action (ActionPillStaticButton) stays put. Use size="mobile" in the bottom bar and size="desktop" in the header, with the same buttons in the same order. Pass the same `variant` to the pill and the buttons inside it.
+
+#### PageTitleProvider  `@whiskeyjack/page-title-context`
+
+React context that lets any page set the desktop header title.
+
+Exports: `PageTitleProvider`, `usePageTitle`
+
+Wrap the Layout root in PageTitleProvider, call setTitle(node) from a page, and read it back in the header. This is a context provider with no DOM root, so it does not forward a ref.
+
+### Actions
+
+#### Button  `@whiskeyjack/button`
+
+The action button. Labels wrap to two lines rather than overflowing, so long translated text stays inside the pill.
+
+Exports: `Button`
+
+Use the default size (40px) for every action button in an app; it matches size="icon" so text and icon buttons align. Reserve size="lg" for hero and landing CTAs. Avoid size="sm", which breaks rhythm against neighbouring default buttons. The accent variant is the primary action, outline the secondary one.
+
+#### ButtonRow  `@whiskeyjack/button-row`
+
+Side-by-side buttons that share a row and stack full-width when they no longer fit.
+
+Exports: `ButtonRow`
+
+Wrap side-by-side button pairs in ButtonRow instead of hand-rolling flex flex-wrap with a min-width floor. Each child grows equally down to minItemWidth (140px by default), then stacks. Raise minItemWidth to stack sooner and keep labels on one line.
+
+#### ConfirmButton  `@whiskeyjack/confirm-button`
+
+Tap-again-to-confirm destructive button, with the armed state announced to assistive tech.
+
+Exports: `ConfirmButton`
+
+Use ConfirmButton for an inline destructive action where a modal would be heavy: delete a row, clear data, reset a setting. The first tap arms it and the second commits. Keep the confirm label explicit about what is about to happen. Pass controlled armed/onArmedChange when sibling actions must be mutually exclusive.
+
+#### DrawerAction  `@whiskeyjack/drawer-action`
+
+A single action in a BottomDrawer footer: plain, form-submit, or tap-again-confirm.
+
+Exports: `DrawerAction`
+
+Modal actions belong in the drawer's sticky footer, never in scrollable content. Lay them out in an even row, most-destructive leftmost and primary rightmost: Delete, Reset, Cancel, Save. A Save uses type="submit" with form="<id>" so it can submit a form rendered in drawer content, and stays disabled until the form is dirty and valid.
+
+### Forms
+
+#### Input  `@whiskeyjack/input`
+
+Labeled text field that wires a real label to the input for you.
+
+Exports: `Input`
+
+Pass `label` and it renders a real label element tied to the input; otherwise supply your own aria-label. A placeholder is a hint, so keep the label for the field's name. Native input attributes are forwarded, so type, placeholder, and validation work as usual.
+
+#### Select  `@whiskeyjack/select`
+
+Styled native select for a one-of-n choice with more options than a segmented control can show.
+
+Exports: `Select`
+
+Give it a label, value, onChange, and an options array. It stays the native control underneath, so it is accessible and familiar on every platform. For a small set of choices, ToggleGroup reads better.
+
+#### Slider  `@whiskeyjack/slider`
+
+Range input with an optional mono value readout beside its label.
+
+Exports: `Slider`
+
+The control for a value along a continuum: a target, a threshold, a volume. Pass min, max, and value/onChange; add formatValue for a live readout next to the label. It styles the native range thumb across browsers and exposes aria-valuetext.
+
+#### Toggle  `@whiskeyjack/toggle`
+
+Switch control with a label and optional description, for a single on/off setting.
+
+Exports: `Toggle`
+
+Presentational and controlled: you own the value and the change handler, so it drops straight into a settings list. The switch stays physical under RTL by convention, since it carries an on/off metaphor rather than a directional one.
+
+#### ToggleGroup  `@whiskeyjack/toggle-group`
+
+Segmented tile control for one-of-n choices, such as a light / dark / system theme picker.
+
+Exports: `ToggleGroup`
+
+Presentational and generic over the value type. Pass translated labels and Phosphor icons. For more options than a few tiles can hold, use Select.
+
+#### ColorInput  `@whiskeyjack/color-input`
+
+Focusable swatch button that opens the OS-native color picker and returns the chosen hex.
+
+Exports: `ColorInput`
+
+Presentational and i18n-agnostic, so pass a translated aria-label. Use it for a custom accent or a gradient stop, and pair it with applyAccentColor to retint the whole UI from the chosen hex. `unset` renders the "nothing chosen yet" state while still opening the picker at `value`.
+
+#### ReorderList  `@whiskeyjack/reorder-list`
+
+Drag-to-reorder list with an accessible arrow-button fallback, so it works by pointer, touch, and keyboard.
+
+Exports: `ReorderList`
+
+Give it items, getId, renderLabel, and onReorder, plus translated moveUpLabel and moveDownLabel for the buttons. For long lists pass className="max-h-72 overflow-y-auto pr-1": dragging auto-scrolls natively and arrow moves scroll the moved item into view.
+
+### Overlays & feedback
+
+#### BottomDrawer  `@whiskeyjack/bottom-drawer`
+
+Bottom sheet on mobile, centered dialog on desktop. Swipe, backdrop, Escape, and hardware Back all dismiss it.
+
+Exports: `BottomDrawer`
+
+BottomDrawer is for interaction: adding, editing, confirming. Read-only display content (stats, charts, detail views) belongs in the app's main chrome instead. Put actions in the sticky `footer` as DrawerActions, keep field edits deferred until Save, and treat every dismissal as a free cancel. Pass initialFocus="container" for multi-field forms so opening it does not pop the mobile keyboard. It portals to body, so it is safe to mount inside a transformed ancestor.
+
+#### Toast  `@whiskeyjack/toast`
+
+Floating notification pill fixed below the header, for app-level messages.
+
+Exports: `Toast`
+
+Toast is for app-level notifications that float above the page: an armed-state hint, an update-available message with an action. For a message bound to a specific surface, use Notice. The caller owns `open` and any auto-dismiss timing. Keep messages to one short sentence.
+
+#### Notice  `@whiskeyjack/notice`
+
+Inline tone-tinted status box for context-bound messages, with each tone setting its own ARIA live-region role.
+
+Exports: `Notice`, `noticeVariants`
+
+Reach for Notice when a message belongs to a specific surface: a sync result under a Settings section, a validation error beside a form. Pick the tone (success, warning, error, info, neutral) and it sets the right live-region role. Use this instead of hand-rolling a tinted status box. For a floating app-level notification, use Toast.
+
+#### EmptyState  `@whiskeyjack/empty-state`
+
+Centered icon tile, title, subtitle, and optional call to action for an empty list or a fresh install.
+
+Exports: `EmptyState`
+
+Use it wherever a list, tab, or screen has no content yet: a first run, an empty search, a cleared history. The subtitle sets expectations and the optional CTA points at the obvious next step.
+
+#### PullToRefreshIndicator  `@whiskeyjack/pull-to-refresh-indicator`
+
+Frosted pill and spinner that slides down as you pull; the visual companion to usePullToRefresh.
+
+Exports: `PullToRefreshIndicator`
+
+Pair it with usePullToRefresh and feed it that hook's pullDistance and isRefreshing. It is aria-hidden because the hook announces state changes itself. Opt-in, for apps that sync.
+
+### Display
+
+#### Card  `@whiskeyjack/card`
+
+The elevated surface primitive, with header, title, description, content, and footer slots.
+
+Exports: `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`
+
+Use Card to group related content into a panel. The semantic tokens keep it correct in light, dark, and OLED with no per-card styling, and --shadow-card is its standard elevation.
+
+#### Badge  `@whiskeyjack/badge`
+
+Tone-tinted pill label on the semantic color scales, for status and classification at a glance.
+
+Exports: `Badge`, `badgeVariants`
+
+Badge is the smallest tone surface: a static pill for a status or classification, with `strong` for the top tier of a scale. The label carries the meaning and the tone reinforces it, so it reads without relying on color alone. Use this instead of hand-rolling a tinted pill. Non-interactive and i18n-agnostic.
+
+#### ProgressBar  `@whiskeyjack/progress-bar`
+
+The accent progress primitive: determinate fill, open-ended indicator, or segment accumulation against a tally.
+
+Exports: `ProgressBar`
+
+Pass `value` for a determinate fill, `indeterminate` for open-ended progress, or `count` for segment accumulation. Use `label` to expose role="progressbar", or `decorative` when adjacent text already conveys the value. It renders as spans, so it is valid inside a button, which is how the TabBar underline works.
+
+#### CalendarHeatmap  `@whiskeyjack/calendar-heatmap`
+
+GitHub-contributions-style activity heatmap, in squares or check-in dots.
+
+Exports: `CalendarHeatmap`
+
+Feed it contiguous daily cells (oldest first) and it lays them into a Monday-top week grid. The grid is fluid, so a long range shrinks to fit a mobile container rather than scrolling horizontally and fighting tab-swipe gestures. Presentational and i18n-agnostic: pass translated label, lessLabel, moreLabel, and monthLabels.
+
+#### ScrollIndicator  `@whiskeyjack/scroll-indicator`
+
+Read-only auto-hiding scroll thumb for scrollers whose native scrollbar would run behind floating chrome.
+
+Exports: `ScrollIndicator`
+
+Render it inside a `relative` parent that contains the scroll container, and pair it with .scrollbar-hide on the scroller. Set topOffset to the floating header's height plus a few pixels (68 for a 64px header). Purely visual: aria-hidden and pointer-events-none. BottomDrawer embeds one already.
+
+### Hooks & utilities
+
+#### useTheme  `@whiskeyjack/use-theme`
+
+The theme engine: light, dark, system, and OLED, with persistence and theme-color meta kept in sync.
+
+Exports: `useTheme`
+
+Use this instead of hand-rolling matchMedia listeners, dark-class toggling, or theme-color meta updates. Two modes: uncontrolled (pass storageKey and the hook owns localStorage) or controlled (pass mode from your own settings store). The theme colour derives from the background tokens, so a token change reaches the meta tag with no per-app edit.
+
+#### useSwipeNavigation  `@whiskeyjack/use-swipe-navigation`
+
+Swipe between tabs with an axis-locked touch gesture that flips direction under RTL.
+
+Exports: `useSwipeNavigation`
+
+Any TabBar should be paired with this so tabbed content swipes. Attach the handlers to a touch-pan-y wrapper only when count >= 2. The wrapper must be viewport-sized (min-h-[calc(100dvh-6rem)] md:min-h-0), since a content-height wrapper silently ignores swipes below short content.
+
+#### usePullToRefresh  `@whiskeyjack/use-pull-to-refresh`
+
+Touch pull-to-refresh that coexists with tab swipes and overscroll-behavior: none.
+
+Exports: `usePullToRefresh`
+
+Engages only on a downward drag pinned to the top of the scroller. Pass scrollRef for an inner scroller, or omit it for the document. It mirrors useSwipeNavigation's axis lock so horizontal tab swipes are untouched. Gate it with disabled when there is nothing to sync. Pair with PullToRefreshIndicator.
+
+#### useDragReorder  `@whiskeyjack/use-drag-reorder`
+
+Drag-to-reorder list logic with an accessible keyboard path, behind ReorderList.
+
+Exports: `useDragReorder`
+
+Most apps want ReorderList, which wraps this hook with rendering and arrow buttons. Reach for the hook directly when you need a different row presentation.
+
+#### useTabBarFade  `@whiskeyjack/use-tab-bar-fade`
+
+Edge-fade masks for a horizontally overflowing tab strip; returns the CSS class to apply.
+
+Exports: `useTabBarFade`
+
+TabBar integrates this already. Use it directly only for a custom horizontal strip. It maps the logical start/end fade edge to the physical mask class under RTL, and the fade applies at md+ only.
+
+#### useScrollFade  `@whiskeyjack/use-scroll-fade`
+
+Vertical edge-fade masks for a height-capped scrollable panel; returns the CSS class to apply.
+
+Exports: `useScrollFade`
+
+The vertical counterpart to useTabBarFade, for reorder lists and icon grids. Apply the returned class to the scroll container. ReorderList integrates it already. Applies at every viewport size.
+
+#### useScrollIndicator  `@whiskeyjack/use-scroll-indicator`
+
+Scroll metrics (thumb size, position, visibility) that drive ScrollIndicator.
+
+Exports: `useScrollIndicator`
+
+ScrollIndicator wraps this. Use the hook directly only for a custom thumb. It auto-hides ~800ms after scrolling stops and refreshes on ResizeObserver and MutationObserver events.
+
+#### useReducedMotion  `@whiskeyjack/use-reduced-motion`
+
+Respect the user's reduced-motion preference in JS-driven motion.
+
+Exports: `useReducedMotion`
+
+Gate any JS-driven motion (smooth scroll, swipe slides, animated counters) behind this. CSS-driven motion should use the prefers-reduced-motion media query directly.
+
+#### useFocusTrap  `@whiskeyjack/use-focus-trap`
+
+Trap focus inside an overlay while it is open, and restore it to the trigger on close.
+
+Exports: `useFocusTrap`
+
+BottomDrawer uses this already. For a custom overlay, pass initialFocus: 'container' when the overlay holds a multi-field form, so opening it does not focus a text field and pop the mobile keyboard. Tab still reaches every field.
+
+#### useRouteFocus  `@whiskeyjack/use-route-focus`
+
+Move focus to the main content on route change, so keyboard and screen-reader users land in the new page.
+
+Exports: `useRouteFocus`
+
+Point it at the AppMain ref, which forwards its ref for exactly this. Required for any client-side-routed app to meet WCAG focus-order expectations.
+
+#### useInputType  `@whiskeyjack/use-input-type`
+
+Detect touch versus mouse input, for controls that phrase or size themselves differently.
+
+Exports: `useInputType`
+
+Used by the tap-again actions to choose between "Tap again" and "Click again" wording. Resolves via matchMedia('(hover: hover)').
+
+#### announce  `@whiskeyjack/announce`
+
+Announce a message to assistive technology through a shared live region.
+
+Exports: `announce`
+
+Use this for status and async updates that have no visible text change: sync results, timers, armed states. Pass a politeness of 'polite' or 'assertive'.
+
+#### applyAccentColor  `@whiskeyjack/accent-foreground`
+
+Retint the whole UI from one accent color, with a WCAG-legible foreground picked automatically.
+
+Exports: `applyAccentForeground`, `applyAccentColor`, `clearAccentColor`
+
+applyAccentColor derives a full --color-accent-* scale from a single hex and sets the matching foreground by WCAG luminance, so text on the accent stays legible at any hue. Pair it with ColorInput for a user-chosen accent, and call clearAccentColor to fall back to the token default.
+
+#### useMergedRefs  `@whiskeyjack/merge-refs`
+
+Combine an internal ref with a forwarded one.
+
+Exports: `mergeRefs`, `useMergedRefs`
+
+Every component that keeps a ref to its own root while also forwarding a caller ref uses this. Reach for it when building a component that follows the same forwardRef contract.
+
+#### isRTL  `@whiskeyjack/direction`
+
+Detect right-to-left direction for JS-driven interactions that CSS cannot reach.
+
+Exports: `isRTL`
+
+CSS logical properties (ps/pe, ms/me, start/end) handle mirroring for layout. Use isRTL only where JS owns the geometry: swipe direction, scroll targets, fade-edge mask selection.
+
+#### cn  `@whiskeyjack/utils`
+
+Tailwind class merging (clsx plus tailwind-merge).
+
+Exports: `cn`
+
+The class-merging helper every component uses to merge a caller className onto its root. Required by most registry items.
+
+## Conventions
+
+- Colour, spacing, radius and shadow come from token CSS variables
+  (`var(--color-accent-500)`), never hardcoded values.
+- The design system bundles no icon library; components take icon nodes as
+  props. The apps it was extracted from use Phosphor.
+- Every component that renders a DOM root forwards its ref to that root and
+  merges a caller `className`.
+- Interactive components are controlled (`value`/`onChange`,
+  `activeId`/`onSelect`, `open`/`onClose`).
+- Directional layout uses Tailwind logical utilities (`ps`/`pe`, `ms`/`me`,
+  `start`/`end`) so RTL mirrors correctly.
+- Target is WCAG 2.1 AA: visible focus rings, focus trapping in overlays,
+  44px touch targets, and reduced-motion respect are built in.

@@ -2,6 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "merge-refs",
   "type": "registry:lib",
+  "title": "useMergedRefs",
+  "description": "Combine an internal ref with a forwarded one.",
+  "categories": [
+    "utils"
+  ],
   "files": [
     {
       "path": "lib/merge-refs.ts",
@@ -9,5 +14,17 @@
       "target": "lib/merge-refs.ts",
       "content": "import * as React from \"react\";\n\ntype PossibleRef<T> = React.Ref<T> | undefined;\n\nfunction assignRef<T>(ref: PossibleRef<T>, value: T | null): void {\n  if (typeof ref === \"function\") ref(value);\n  else if (ref != null) (ref as React.MutableRefObject<T | null>).current = value;\n}\n\n/**\n * Merge several refs into one callback ref. Use when a component keeps an\n * internal ref to its root element but must also honour a forwarded `ref` (so\n * consumers can measure/focus it) -- the DS composites that forward refs use\n * this. Prefer `useMergedRefs` inside components so the callback stays stable\n * across renders.\n */\nexport function mergeRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {\n  return (node: T | null) => {\n    for (const ref of refs) assignRef(ref, node);\n  };\n}\n\n/**\n * Hook form of `mergeRefs`: returns a stable merged callback ref. The refs are\n * used as the memo dependencies, so it re-creates only if a ref identity\n * changes (internal `useRef` objects and forwarded refs are stable, so in\n * practice it never does).\n */\nexport function useMergedRefs<T>(...refs: PossibleRef<T>[]): React.RefCallback<T> {\n  // eslint-disable-next-line react-hooks/exhaustive-deps\n  return React.useCallback(mergeRefs(...refs), refs);\n}\n"
     }
-  ]
+  ],
+  "docs": "Every component that keeps a ref to its own root while also forwarding a caller ref uses this. Reach for it when building a component that follows the same forwardRef contract.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "utils"
+    ],
+    "exports": [
+      "mergeRefs",
+      "useMergedRefs"
+    ],
+    "siteSlug": "use-merged-refs"
+  }
 }

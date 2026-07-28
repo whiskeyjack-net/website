@@ -2,6 +2,12 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "notice",
   "type": "registry:ui",
+  "title": "Notice",
+  "description": "Inline tone-tinted status box for context-bound messages, with each tone setting its own ARIA live-region role.",
+  "categories": [
+    "overlays",
+    "feedback"
+  ],
   "dependencies": [
     "class-variance-authority"
   ],
@@ -15,5 +21,18 @@
       "target": "components/ui/notice.tsx",
       "content": "import * as React from 'react'\nimport { cva, type VariantProps } from 'class-variance-authority'\nimport { cn } from '@/lib/utils'\n\nconst noticeVariants = cva('p-3 rounded-lg border text-sm', {\n  variants: {\n    tone: {\n      error: [\n        'bg-[var(--color-error-50)] dark:bg-[color-mix(in_srgb,var(--color-error-900)_20%,transparent)]',\n        'border-[var(--color-error-200)] dark:border-[var(--color-error-800)]',\n        'text-[var(--color-error-700)] dark:text-[var(--color-error-400)]',\n      ].join(' '),\n      warning: [\n        'bg-[var(--color-warning-50)] dark:bg-[color-mix(in_srgb,var(--color-warning-900)_20%,transparent)]',\n        'border-[var(--color-warning-200)] dark:border-[var(--color-warning-800)]',\n        'text-[var(--color-warning-700)] dark:text-[var(--color-warning-400)]',\n      ].join(' '),\n      success: [\n        'bg-[var(--color-success-50)] dark:bg-[color-mix(in_srgb,var(--color-success-900)_20%,transparent)]',\n        'border-[var(--color-success-200)] dark:border-[var(--color-success-800)]',\n        'text-[var(--color-success-700)] dark:text-[var(--color-success-400)]',\n      ].join(' '),\n      info: [\n        'bg-[var(--color-info-50)] dark:bg-[color-mix(in_srgb,var(--color-info-900)_20%,transparent)]',\n        'border-[var(--color-info-200)] dark:border-[var(--color-info-800)]',\n        'text-[var(--color-info-700)] dark:text-[var(--color-info-400)]',\n      ].join(' '),\n      neutral: [\n        'bg-[var(--color-warm-50)] dark:bg-[var(--color-neutral-800)]',\n        'border-[var(--color-border-light)] dark:border-[var(--color-border-dark)]',\n        'text-[var(--color-text-secondary-light)] dark:text-[var(--color-text-secondary-dark)]',\n      ].join(' '),\n    },\n  },\n  defaultVariants: {\n    tone: 'neutral',\n  },\n})\n\nexport interface NoticeProps\n  extends React.HTMLAttributes<HTMLDivElement>,\n    VariantProps<typeof noticeVariants> {\n  /** Optional leading icon element (e.g. a 16px filled Phosphor icon),\n   *  rendered in the tone's text color on the same line as the content. */\n  icon?: React.ReactNode\n}\n\n/**\n * In-flow, tone-tinted status box for context-bound messages: sync results,\n * form validation errors, inline confirmations. Sits in the surrounding\n * layout (inside Settings sections, below form fields) rather than floating.\n * For app-level floating notifications below the header, use `Toast`.\n *\n * With `icon`, the content renders on one line next to it. Without `icon`,\n * children render as-is, so richer layouts (multiple lines, button rows)\n * can be passed directly.\n */\n/** Maps a tone to its ARIA live-region role and aria-live value. */\nfunction getToneAriaProps(tone: string | null | undefined): React.HTMLAttributes<HTMLDivElement> {\n  switch (tone) {\n    case 'error':\n      return { role: 'alert' }\n    case 'success':\n    case 'warning':\n    case 'info':\n      return { role: 'status', 'aria-live': 'polite' }\n    default:\n      // 'neutral' and undefined: plain div, no live-region semantics\n      return {}\n  }\n}\n\nconst Notice = React.forwardRef<HTMLDivElement, NoticeProps>(\n  ({ tone, icon, className, children, ...props }, ref) => {\n    const ariaProps = getToneAriaProps(tone)\n    return (\n      <div ref={ref} className={cn(noticeVariants({ tone }), className)} {...ariaProps} {...props}>\n        {icon ? (\n          <p className=\"flex items-center gap-2\">\n            {icon}\n            <span className=\"min-w-0\">{children}</span>\n          </p>\n        ) : (\n          children\n        )}\n      </div>\n    )\n  },\n)\nNotice.displayName = 'Notice'\n\nexport { Notice, noticeVariants }\n"
     }
-  ]
+  ],
+  "docs": "Reach for Notice when a message belongs to a specific surface: a sync result under a Settings section, a validation error beside a form. Pick the tone (success, warning, error, info, neutral) and it sets the right live-region role. Use this instead of hand-rolling a tinted status box. For a floating app-level notification, use Toast.",
+  "meta": {
+    "group": "overlays",
+    "related": [
+      "toast",
+      "badge"
+    ],
+    "exports": [
+      "Notice",
+      "noticeVariants"
+    ],
+    "siteSlug": "notice"
+  }
 }

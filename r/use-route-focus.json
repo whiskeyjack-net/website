@@ -2,6 +2,12 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "use-route-focus",
   "type": "registry:hook",
+  "title": "useRouteFocus",
+  "description": "Move focus to the main content on route change, so keyboard and screen-reader users land in the new page.",
+  "categories": [
+    "hooks",
+    "accessibility"
+  ],
   "files": [
     {
       "path": "hooks/use-route-focus.ts",
@@ -9,5 +15,17 @@
       "target": "hooks/use-route-focus.ts",
       "content": "import { useEffect, useRef, type RefObject } from \"react\";\n\n/**\n * Moves keyboard / screen-reader focus to `ref` whenever `routeKey` changes\n * (e.g. on SPA navigation), so focus isn't stranded on the link that was\n * clicked or lost to an unmounted node. Skips the initial mount.\n *\n * Point it at a landmark -- typically `<main>` with `tabIndex={-1}` and\n * `outline-none` (it's a container, not a control, so it shouldn't show a focus\n * ring). Focus is set with `preventScroll` so navigation doesn't cause a jump.\n *\n * Router-agnostic: the caller supplies the route key (e.g. `location.pathname`).\n */\nexport function useRouteFocus(\n  routeKey: unknown,\n  ref: RefObject<HTMLElement | null>,\n): void {\n  const isFirstRender = useRef(true);\n  useEffect(() => {\n    if (isFirstRender.current) {\n      isFirstRender.current = false;\n      return;\n    }\n    ref.current?.focus({ preventScroll: true });\n  }, [routeKey, ref]);\n}\n"
     }
-  ]
+  ],
+  "docs": "Point it at the AppMain ref, which forwards its ref for exactly this. Required for any client-side-routed app to meet WCAG focus-order expectations.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "app-shell",
+      "use-focus-trap"
+    ],
+    "exports": [
+      "useRouteFocus"
+    ],
+    "siteSlug": "use-route-focus"
+  }
 }

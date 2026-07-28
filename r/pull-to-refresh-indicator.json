@@ -2,6 +2,12 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "pull-to-refresh-indicator",
   "type": "registry:ui",
+  "title": "PullToRefreshIndicator",
+  "description": "Frosted pill and spinner that slides down as you pull; the visual companion to usePullToRefresh.",
+  "categories": [
+    "overlays",
+    "feedback"
+  ],
   "registryDependencies": [
     "https://whiskeyjack.net/r/utils.json"
   ],
@@ -12,5 +18,16 @@
       "target": "components/ui/pull-to-refresh-indicator.tsx",
       "content": "import * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\nexport interface PullToRefreshIndicatorProps {\n  /** Visual pull distance from `usePullToRefresh` (px). */\n  pullDistance: number;\n  /** True while the refresh is in flight. */\n  isRefreshing: boolean;\n  /** Distance at which a release triggers refresh; drives the reveal. Default 64. */\n  threshold?: number;\n  className?: string;\n}\n\n/**\n * Visual companion to `usePullToRefresh`: a frosted pill with a circular spinner\n * that slides down from the top edge as the user pulls and spins while\n * refreshing. Fixed and centered (the Toast positioning recipe), below any\n * top safe-area inset; mobile-oriented (the gesture is touch-only). Purely\n * decorative (`aria-hidden`) -- the hook's `announce()` covers screen readers,\n * so there is no duplicate live region here. Motion is handled by the global\n * reduced-motion stylesheet.\n */\nexport const PullToRefreshIndicator = React.forwardRef<HTMLDivElement, PullToRefreshIndicatorProps>(function PullToRefreshIndicator({\n  pullDistance,\n  isRefreshing,\n  threshold = 64,\n  className,\n}, ref) {\n  const active = isRefreshing || pullDistance > 0;\n  const progress = Math.min(1, pullDistance / threshold);\n  const translateY = isRefreshing ? threshold : pullDistance;\n\n  return (\n    <div\n      ref={ref}\n      aria-hidden\n      className={cn(\n        \"pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center safe-top\",\n        className\n      )}\n      style={{\n        transform: `translateY(${Math.max(0, translateY - 8)}px)`,\n        opacity: active ? 1 : 0,\n        transition: active ? undefined : \"opacity 150ms ease, transform 150ms ease\",\n      }}\n    >\n      <div className=\"mt-2 flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border-light)] bg-[var(--color-surface-light)] shadow-md dark:border-[var(--color-border-dark)] dark:bg-[var(--color-surface-dark)]\">\n        <span\n          className={cn(\n            \"block h-5 w-5 rounded-full border-2 border-[var(--color-accent-500)] border-t-transparent\",\n            isRefreshing && \"animate-spin\"\n          )}\n          style={\n            isRefreshing\n              ? undefined\n              : { transform: `rotate(${progress * 270}deg)`, opacity: 0.35 + progress * 0.65 }\n          }\n        />\n      </div>\n    </div>\n  );\n});\n\nPullToRefreshIndicator.displayName = \"PullToRefreshIndicator\";\n"
     }
-  ]
+  ],
+  "docs": "Pair it with usePullToRefresh and feed it that hook's pullDistance and isRefreshing. It is aria-hidden because the hook announces state changes itself. Opt-in, for apps that sync.",
+  "meta": {
+    "group": "overlays",
+    "related": [
+      "use-pull-to-refresh"
+    ],
+    "exports": [
+      "PullToRefreshIndicator"
+    ],
+    "siteSlug": "pull-to-refresh-indicator"
+  }
 }

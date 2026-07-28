@@ -2,6 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "use-tab-bar-fade",
   "type": "registry:hook",
+  "title": "useTabBarFade",
+  "description": "Edge-fade masks for a horizontally overflowing tab strip; returns the CSS class to apply.",
+  "categories": [
+    "hooks"
+  ],
   "registryDependencies": [
     "https://whiskeyjack.net/r/direction.json"
   ],
@@ -12,5 +17,17 @@
       "target": "hooks/use-tab-bar-fade.ts",
       "content": "import { useEffect, useState, type RefObject } from 'react'\nimport { isRTL } from '@/lib/direction'\n\nexport type FadeClass = '' | 'tab-bar-fade-left' | 'tab-bar-fade-right' | 'tab-bar-fade-both'\n\n/**\n * Tracks whether the given scroll container has overflow content to the\n * left, right, both, or neither. Returns the CSS class name to apply.\n *\n * Listens to scroll on the container, plus resize (window + ResizeObserver\n * on the container) so the class updates when the container size or its\n * children change.\n *\n * `changeKey` is an optional value that, when it changes, forces the\n * effect to re-run. Use this when the scroll container element is\n * conditionally rendered by a parent (e.g., `{tabs.length >= 2 && <div ref={ref}>}`):\n * pass `tabs.length` (or any signal that the container has now mounted)\n * so the hook can attach its observers once the ref points at a real\n * element.\n */\nexport function useTabBarFade(ref: RefObject<HTMLElement | null>, changeKey?: unknown): FadeClass {\n  const [fade, setFade] = useState<FadeClass>('')\n\n  useEffect(() => {\n    const el = ref.current\n    if (!el) return\n\n    const update = () => {\n      const { scrollLeft, scrollWidth, clientWidth } = el\n      const maxScroll = scrollWidth - clientWidth\n      // Normalize across the LTR (0..max) and modern-RTL (0..-max) scrollLeft\n      // conventions: `pos` is 0 at the START edge and grows toward the END.\n      const pos = Math.abs(scrollLeft)\n      // 1px tolerance handles sub-pixel rendering at the extreme edges.\n      const canStart = pos > 1\n      const canEnd = pos < maxScroll - 1\n      // Map the logical start/end to the physical mask class per direction: the\n      // start edge is on the left in LTR, on the right in RTL.\n      const rtl = isRTL(el)\n      const startClass: FadeClass = rtl ? 'tab-bar-fade-right' : 'tab-bar-fade-left'\n      const endClass: FadeClass = rtl ? 'tab-bar-fade-left' : 'tab-bar-fade-right'\n      const cls: FadeClass =\n        canStart && canEnd ? 'tab-bar-fade-both'\n          : canStart ? startClass\n          : canEnd ? endClass\n          : ''\n      setFade(prev => prev === cls ? prev : cls)\n    }\n\n    update()\n    el.addEventListener('scroll', update, { passive: true })\n    const ro = new ResizeObserver(update)\n    ro.observe(el)\n    // Also observe each child -- a scrollable container's own size doesn't\n    // change when overflow children are added, but ResizeObserver on the\n    // children catches their sizing (e.g., async-loaded tab labels).\n    Array.from(el.children).forEach(child => ro.observe(child))\n    // MutationObserver catches add/remove of tab elements (e.g., when the\n    // data snapshot arrives and renders the tabs).\n    const mo = new MutationObserver(() => {\n      Array.from(el.children).forEach(child => ro.observe(child))\n      update()\n    })\n    mo.observe(el, { childList: true })\n    window.addEventListener('resize', update)\n\n    return () => {\n      el.removeEventListener('scroll', update)\n      ro.disconnect()\n      mo.disconnect()\n      window.removeEventListener('resize', update)\n    }\n  }, [ref, changeKey])\n\n  return fade\n}\n"
     }
-  ]
+  ],
+  "docs": "TabBar integrates this already. Use it directly only for a custom horizontal strip. It maps the logical start/end fade edge to the physical mask class under RTL, and the fade applies at md+ only.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "tab-bar",
+      "use-scroll-fade"
+    ],
+    "exports": [
+      "useTabBarFade"
+    ],
+    "siteSlug": "use-tab-bar-fade"
+  }
 }

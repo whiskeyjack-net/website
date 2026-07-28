@@ -2,6 +2,12 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "use-reduced-motion",
   "type": "registry:hook",
+  "title": "useReducedMotion",
+  "description": "Respect the user's reduced-motion preference in JS-driven motion.",
+  "categories": [
+    "hooks",
+    "accessibility"
+  ],
   "files": [
     {
       "path": "hooks/use-reduced-motion.ts",
@@ -9,5 +15,16 @@
       "target": "hooks/use-reduced-motion.ts",
       "content": "import { useEffect, useState } from \"react\";\n\n/**\n * Tracks the user's `prefers-reduced-motion` setting.\n *\n * CSS transitions/animations are already neutralized globally by the\n * reduced-motion block in `utilities.css`; use this hook to gate JS-driven\n * motion that CSS can't reach -- e.g. `scrollTo`/`scrollIntoView({ behavior:\n * 'smooth' })` and swipe slide animations. Returns `true` when the user prefers\n * reduced motion.\n */\nexport function useReducedMotion(): boolean {\n  const [reduced, setReduced] = useState(false);\n\n  useEffect(() => {\n    const mq = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n    setReduced(mq.matches);\n    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);\n    mq.addEventListener(\"change\", onChange);\n    return () => mq.removeEventListener(\"change\", onChange);\n  }, []);\n\n  return reduced;\n}\n"
     }
-  ]
+  ],
+  "docs": "Gate any JS-driven motion (smooth scroll, swipe slides, animated counters) behind this. CSS-driven motion should use the prefers-reduced-motion media query directly.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "use-swipe-navigation"
+    ],
+    "exports": [
+      "useReducedMotion"
+    ],
+    "siteSlug": "use-reduced-motion"
+  }
 }

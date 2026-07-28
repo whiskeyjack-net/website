@@ -2,6 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "use-scroll-indicator",
   "type": "registry:hook",
+  "title": "useScrollIndicator",
+  "description": "Scroll metrics (thumb size, position, visibility) that drive ScrollIndicator.",
+  "categories": [
+    "hooks"
+  ],
   "files": [
     {
       "path": "hooks/use-scroll-indicator.ts",
@@ -9,5 +14,16 @@
       "target": "hooks/use-scroll-indicator.ts",
       "content": "import { useEffect, useRef, useState, type RefObject } from 'react'\n\nexport interface ScrollIndicatorState {\n  /** Thumb height as % of indicator track height. */\n  thumbHeightPct: number\n  /** Thumb top offset as % of indicator track height. */\n  thumbTopPct: number\n  /** True while the user is actively scrolling or just stopped. */\n  visible: boolean\n  /** True iff the container actually has overflow content to scroll. */\n  hasOverflow: boolean\n}\n\n/**\n * Tracks scroll position on a container and exposes the metrics needed to\n * render a custom scroll indicator. Thumb size/position are returned as\n * percentages of the indicator's own track height, so the indicator element\n * can be sized/positioned with `top: X%` and `height: Y%` without the hook\n * needing to know how tall the indicator is.\n *\n * Auto-hide: visible flips to true on scroll, then back to false after the\n * idle timeout (default 800ms).\n */\nexport function useScrollIndicator(\n  ref: RefObject<HTMLElement>,\n  idleMs = 800,\n): ScrollIndicatorState {\n  const [state, setState] = useState<ScrollIndicatorState>({\n    thumbHeightPct: 0,\n    thumbTopPct: 0,\n    visible: false,\n    hasOverflow: false,\n  })\n  const hideTimer = useRef<number | null>(null)\n\n  useEffect(() => {\n    const el = ref.current\n    if (!el) return\n\n    const update = (showThumb: boolean) => {\n      const { scrollTop, scrollHeight, clientHeight } = el\n      const hasOverflow = scrollHeight > clientHeight + 1\n      if (!hasOverflow) {\n        setState(prev =>\n          prev.hasOverflow ? { ...prev, hasOverflow: false, visible: false } : prev,\n        )\n        return\n      }\n      // thumb size = visible-fraction-of-content; thumb top moves linearly with\n      // scrollTop. Expressed as percentages of the indicator's own track height\n      // so the component can use CSS percent units without measuring itself.\n      const thumbHeightPct = (clientHeight / scrollHeight) * 100\n      const thumbTopPct = (scrollTop / scrollHeight) * 100\n      setState({\n        thumbHeightPct,\n        thumbTopPct,\n        visible: showThumb,\n        hasOverflow: true,\n      })\n    }\n\n    const onScroll = () => {\n      update(true)\n      if (hideTimer.current) window.clearTimeout(hideTimer.current)\n      hideTimer.current = window.setTimeout(() => {\n        setState(prev => (prev.visible ? { ...prev, visible: false } : prev))\n      }, idleMs)\n    }\n\n    update(false)\n    el.addEventListener('scroll', onScroll, { passive: true })\n    const ro = new ResizeObserver(() => update(false))\n    ro.observe(el)\n    const mo = new MutationObserver(() => update(false))\n    mo.observe(el, { childList: true, subtree: true })\n\n    return () => {\n      el.removeEventListener('scroll', onScroll)\n      ro.disconnect()\n      mo.disconnect()\n      if (hideTimer.current) window.clearTimeout(hideTimer.current)\n    }\n  }, [ref, idleMs])\n\n  return state\n}\n"
     }
-  ]
+  ],
+  "docs": "ScrollIndicator wraps this. Use the hook directly only for a custom thumb. It auto-hides ~800ms after scrolling stops and refreshes on ResizeObserver and MutationObserver events.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "scroll-indicator"
+    ],
+    "exports": [
+      "useScrollIndicator"
+    ],
+    "siteSlug": "use-scroll-indicator"
+  }
 }
