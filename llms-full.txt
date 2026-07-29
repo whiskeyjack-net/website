@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (45)
+## Components, hooks and utilities (46)
 
 ### Navigation & layout
 
@@ -40,7 +40,7 @@ The three-phase content row below a floating header: optional left sidebar, main
 
 Exports: `AppPanes`, `useSidebarHost`, `useRailHost`
 
-Sits inside AppShell, below AppHeader, wrapping AppMain. Both rails are portal hosts: the layout owns the region, the page owns its content via useSidebarHost() / useRailHost() and createPortal, which keeps tab state with the page. Gate on `wide`/`xlwide` rather than lg:/xl: so a portrait tablet keeps the tabbed layout and a landscape one deploys the sidebar. A rail with filled=false collapses to zero width rather than unmounting, so the host survives for a page that fills it a moment later.
+Sits inside AppShell, below AppHeader, wrapping AppMain. Both rails are portal hosts: the layout owns the region, the page owns its content via useSidebarHost() / useRailHost() and createPortal, which keeps tab state with the page. Gate on `wide`/`xlwide` rather than lg:/xl: so a portrait tablet keeps the tabbed layout and a landscape one deploys the sidebar. A rail with filled=false collapses to zero width rather than unmounting, so the host survives for a page that fills it a moment later. Use filled='auto' when the layout would otherwise have to enumerate which pages fill which pane: the pane watches its own host for children and collapses itself, which the layout cannot do because AppPanes owns that node. Layout stays in CSS wherever it can -- render both a TabBar and SidebarTabs and let the variants hide one; useLayoutGate is for the rare case one expensive component has to move between the two regions.
 
 #### AppShell  `@whiskeyjack/app-shell`
 
@@ -323,6 +323,14 @@ Detect touch versus mouse input, for controls that phrase or size themselves dif
 Exports: `useInputType`
 
 Used by the tap-again actions to choose between "Tap again" and "Click again" wording. Resolves via matchMedia('(hover: hover)').
+
+#### useLayoutGate  `@whiskeyjack/use-layout-gate`
+
+Read the wide / xlwide layout gates in JS, for a decision CSS cannot express.
+
+Exports: `useLayoutGate`, `LAYOUT_GATES`
+
+Reach for this only when ONE instance of an expensive component has to move between two places in the tree -- Icon Stack's live preview, which runs the real icon pipeline and would run it twice if it were rendered inline and in the rail with one hidden. Everything else should stay in CSS: render both the TabBar and the SidebarTabs and let the wide:/xlwide: variants hide one. Never hand-roll matchMedia('(min-width: 1280px)') for this -- the gates are pointer- and orientation-aware, so a plain width query disagrees with the CSS on a landscape tablet.
 
 #### usePullToRefresh  `@whiskeyjack/use-pull-to-refresh`
 

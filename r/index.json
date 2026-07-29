@@ -678,6 +678,22 @@
       ]
     },
     {
+      "name": "use-layout-gate",
+      "type": "registry:hook",
+      "title": "useLayoutGate",
+      "description": "Read the wide / xlwide layout gates in JS, for a decision CSS cannot express.",
+      "categories": [
+        "hooks",
+        "layout"
+      ],
+      "files": [
+        {
+          "path": "hooks/use-layout-gate.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
       "name": "use-pull-to-refresh",
       "type": "registry:hook",
       "title": "usePullToRefresh",

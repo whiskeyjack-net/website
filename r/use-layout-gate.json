@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-layout-gate",
+  "type": "registry:hook",
+  "title": "useLayoutGate",
+  "description": "Read the wide / xlwide layout gates in JS, for a decision CSS cannot express.",
+  "categories": [
+    "hooks",
+    "layout"
+  ],
+  "files": [
+    {
+      "path": "hooks/use-layout-gate.ts",
+      "type": "registry:hook",
+      "target": "hooks/use-layout-gate.ts",
+      "content": "import { useEffect, useState } from 'react'\n\n/** The gates an app can query. Mirrors the Tailwind variant names. */\nexport type LayoutGate = 'wide' | 'xlwide'\n\n/**\n * The `wide` / `xlwide` layout gates as raw media-query strings (no `@media`\n * prefix -- `matchMedia` must not have one).\n *\n * These decide when an app's side-by-side (sidebar / rail) presentation\n * deploys, and they are pointer- and orientation-aware rather than plain width\n * breakpoints: a portrait tablet keeps the tabbed layout, and rotating it to\n * landscape deploys the sidebar.\n *\n * The same two strings are declared in the package-root `layout-gates.js`,\n * which is what `tailwind-preset.js` registers as variants -- Tailwind loads\n * the preset as a config module with no TypeScript transform, and the published\n * package ships no `src/`, so the preset cannot read this file. The duplication\n * is pinned by `use-layout-gate.test.ts`, which compares both against the\n * variants the preset actually registers.\n */\nexport const LAYOUT_GATES: Record<LayoutGate, string> = {\n  wide: '(min-width: 768px) and (pointer: coarse) and (orientation: landscape), (min-width: 1024px) and (pointer: fine)',\n  xlwide:\n    '(min-width: 1280px) and (pointer: coarse) and (orientation: landscape), (min-width: 1280px) and (pointer: fine)',\n}\n\n/**\n * Whether a layout gate currently matches, in JS.\n *\n * Layout is normally decided in CSS -- `AppPanes` gates its rails with the\n * `wide:` / `xlwide:` variants, and a page renders both its `TabBar` and its\n * `SidebarTabs` and lets one be hidden. Prefer that: it costs nothing and needs\n * no hook.\n *\n * This hook is for what CSS cannot express: **one** instance of an expensive\n * component that has to move between two places in the tree. Icon Stack's live\n * preview is the case -- it runs the real icon pipeline, so rendering it inline\n * AND in the rail and hiding one would run that pipeline twice on every\n * settings tick. Reading the gate lets the page mount it once, either inline or\n * portaled into the rail.\n *\n * Reading the DS-owned query rather than hand-copying it is the point: an app\n * with its own `matchMedia('(min-width: 1280px)')` silently disagrees with the\n * CSS on a landscape tablet today, and on every device the day a gate moves.\n *\n * SSR-safe: returns `false` where there is no `window`, so a prerender emits\n * the narrow layout and the client corrects on the first effect.\n */\nexport function useLayoutGate(gate: LayoutGate): boolean {\n  const query = LAYOUT_GATES[gate]\n  const [matches, setMatches] = useState(() => {\n    if (typeof window === 'undefined' || !window.matchMedia) return false\n    return window.matchMedia(query).matches\n  })\n\n  useEffect(() => {\n    if (typeof window === 'undefined' || !window.matchMedia) return\n    const mq = window.matchMedia(query)\n    // Re-read on subscribe: between the initial render and this effect the\n    // window may already have been resized (or the device rotated).\n    setMatches(mq.matches)\n    const handler = (e: MediaQueryListEvent) => setMatches(e.matches)\n    mq.addEventListener('change', handler)\n    return () => mq.removeEventListener('change', handler)\n  }, [query])\n\n  return matches\n}\n"
+    }
+  ],
+  "docs": "Reach for this only when ONE instance of an expensive component has to move between two places in the tree -- Icon Stack's live preview, which runs the real icon pipeline and would run it twice if it were rendered inline and in the rail with one hidden. Everything else should stay in CSS: render both the TabBar and the SidebarTabs and let the wide:/xlwide: variants hide one. Never hand-roll matchMedia('(min-width: 1280px)') for this -- the gates are pointer- and orientation-aware, so a plain width query disagrees with the CSS on a landscape tablet.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "app-panes",
+      "sidebar-tabs",
+      "tab-bar"
+    ],
+    "exports": [
+      "useLayoutGate",
+      "LAYOUT_GATES"
+    ],
+    "siteSlug": "use-layout-gate"
+  }
+}
