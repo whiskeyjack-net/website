@@ -266,7 +266,7 @@ The theme engine: light, dark, system, and OLED, with persistence and theme-colo
 
 Exports: `useTheme`
 
-Use this instead of hand-rolling matchMedia listeners, dark-class toggling, or theme-color meta updates. Two modes: uncontrolled (pass storageKey and the hook owns localStorage) or controlled (pass mode from your own settings store). The theme colour derives from the background tokens, so a token change reaches the meta tag with no per-app edit.
+Use this instead of hand-rolling matchMedia listeners, dark-class toggling, or theme-color meta updates. Two modes: uncontrolled (pass storageKey and the hook owns localStorage) or controlled (pass mode from your own settings store). The theme color derives from the background tokens, so a token change reaches the meta tag with no per-app edit.
 
 #### useSwipeNavigation  `@whiskeyjack/use-swipe-navigation`
 
@@ -390,7 +390,7 @@ The class-merging helper every component uses to merge a caller className onto i
 
 ## Conventions
 
-- Colour, spacing, radius and shadow come from token CSS variables
+- Color, spacing, radius and shadow come from token CSS variables
   (`var(--color-accent-500)`), never hardcoded values.
 - The design system bundles no icon library; components take icon nodes as
   props. The apps it was extracted from use Phosphor.
