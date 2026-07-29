@@ -26,6 +26,26 @@
       ]
     },
     {
+      "name": "app-panes",
+      "type": "registry:ui",
+      "title": "AppPanes",
+      "description": "The three-phase content row below a floating header: optional left sidebar, main region, optional right rail, each gated on the layout variants.",
+      "categories": [
+        "navigation",
+        "layout"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/scroll-indicator.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "components/ui/app-panes.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "app-shell",
       "type": "registry:ui",
       "title": "AppShell",
