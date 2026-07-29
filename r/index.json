@@ -202,6 +202,26 @@
       ]
     },
     {
+      "name": "checkbox-group",
+      "type": "registry:ui",
+      "title": "CheckboxGroup",
+      "description": "Pick-any tile grid: the multi-select counterpart to ToggleGroup.",
+      "categories": [
+        "forms"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/option-tile.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "components/ui/checkbox-group.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "color-input",
       "type": "registry:ui",
       "title": "ColorInput",
@@ -542,6 +562,7 @@
       ],
       "registryDependencies": [
         "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/option-tile.json",
         "https://whiskeyjack.net/r/utils.json"
       ],
       "files": [
@@ -627,6 +648,24 @@
       "files": [
         {
           "path": "lib/merge-refs.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "option-tile",
+      "type": "registry:lib",
+      "title": "optionTileClass",
+      "description": "The selectable-tile class recipe shared by ToggleGroup and CheckboxGroup.",
+      "categories": [
+        "utilities"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "lib/option-tile.ts",
           "type": "registry:lib"
         }
       ]

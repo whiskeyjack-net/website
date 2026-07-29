@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (46)
+## Components, hooks and utilities (48)
 
 ### Navigation & layout
 
@@ -125,6 +125,14 @@ Exports: `DrawerAction`
 Modal actions belong in the drawer's sticky footer, never in scrollable content. Lay them out in an even row, most-destructive leftmost and primary rightmost: Delete, Reset, Cancel, Save. A Save uses type="submit" with form="<id>" so it can submit a form rendered in drawer content, and stays disabled until the form is dirty and valid.
 
 ### Forms
+
+#### CheckboxGroup  `@whiskeyjack/checkbox-group`
+
+Pick-any tile grid: the multi-select counterpart to ToggleGroup.
+
+Exports: `CheckboxGroup`
+
+Use when the answer is a SET and the whole set should be visible and switchable in one gesture (Icon Stack's eleven export platforms). ToggleGroup is a radiogroup by construction, so it cannot express this -- hence a separate component rather than a `multiple` prop: the roles differ, every tile is tabbable because there is no current option to rove from, and `value` is an array. Both draw their tile from optionTileClass, so a pick-one and a pick-any control look identical side by side. If the set is long enough to scroll, a list of Toggle switches is the better shape. Presentational and i18n-free: pass translated labels and an aria-label.
 
 #### ColorInput  `@whiskeyjack/color-input`
 

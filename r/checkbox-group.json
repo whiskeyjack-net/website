@@ -1,0 +1,36 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox-group",
+  "type": "registry:ui",
+  "title": "CheckboxGroup",
+  "description": "Pick-any tile grid: the multi-select counterpart to ToggleGroup.",
+  "categories": [
+    "forms"
+  ],
+  "registryDependencies": [
+    "https://whiskeyjack.net/r/merge-refs.json",
+    "https://whiskeyjack.net/r/option-tile.json",
+    "https://whiskeyjack.net/r/utils.json"
+  ],
+  "files": [
+    {
+      "path": "components/ui/checkbox-group.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/checkbox-group.tsx",
+      "content": "import * as React from 'react'\nimport { cn } from '@/lib/utils'\nimport { optionTileClass } from '@/lib/option-tile'\nimport { useMergedRefs } from '@/lib/merge-refs'\n\nexport interface CheckboxGroupOption<T extends string = string> {\n  value: T\n  label: string\n  /**\n   * Optional icon rendered before the label. The DS bundles no icon library, so\n   * pass the node directly (e.g. `<AppleLogo size={18} />`).\n   */\n  icon?: React.ReactNode\n  /** Dimmed and non-interactive, but still reachable by keyboard. */\n  disabled?: boolean\n}\n\nexport interface CheckboxGroupProps<T extends string = string> {\n  options: CheckboxGroupOption<T>[]\n  /** The chosen values. Order is irrelevant; membership is what renders. */\n  value: T[]\n  onChange: (value: T[]) => void\n  /** Names the group for assistive tech (caller-translated). */\n  'aria-label'?: string\n  /** Grid override. Defaults to two columns, three from `sm`. */\n  className?: string\n}\n\n/**\n * Pick-any tile grid: the multi-select counterpart to `ToggleGroup`.\n *\n * `ToggleGroup` is a `radiogroup` by construction -- exactly one option, roving\n * tabindex, arrow keys to move the selection. That is the wrong widget when the\n * answer is a set, so this is a separate component rather than a `multiple` prop:\n * the ARIA roles differ, the keyboard model differs (every tile is tabbable and\n * Space toggles it, because there is no \"current\" option to rove from), and\n * `value` is an array.\n *\n * Both draw their tile from `optionTileClass`, so a pick-one and a pick-any\n * control look identical side by side.\n *\n * Presentational and i18n-free: pass translated labels and an `aria-label`.\n * Reaching for it means the whole set should be visible and switchable in one\n * gesture -- Icon Stack's eleven export platforms. If the set is long enough to\n * scroll, a list of switches is the better shape.\n *\n * ```tsx\n * <CheckboxGroup\n *   aria-label={t('generator.platforms')}\n *   options={PLATFORMS.map((p) => ({ value: p, label: LABELS[p], icon: <Icon /> }))}\n *   value={enabled}\n *   onChange={setEnabled}\n * />\n * ```\n */\nfunction CheckboxGroupInner<T extends string = string>(\n  { options, value, onChange, className, 'aria-label': ariaLabel }: CheckboxGroupProps<T>,\n  ref: React.ForwardedRef<HTMLDivElement>,\n) {\n  const containerRef = React.useRef<HTMLDivElement>(null)\n  const mergedRef = useMergedRefs(containerRef, ref)\n\n  const toggle = React.useCallback(\n    (option: T) => {\n      onChange(value.includes(option) ? value.filter((v) => v !== option) : [...value, option])\n    },\n    [value, onChange],\n  )\n\n  return (\n    <div\n      ref={mergedRef}\n      role=\"group\"\n      aria-label={ariaLabel}\n      className={cn('grid grid-cols-2 gap-2 sm:grid-cols-3', className)}\n    >\n      {options.map((option) => {\n        const checked = value.includes(option.value)\n        return (\n          <button\n            key={option.value}\n            type=\"button\"\n            // role=checkbox rather than aria-pressed: the state is \"in the set\"\n            // or not, which is what a screen reader should hear, and it mirrors\n            // ToggleGroup's radio semantics one level over.\n            role=\"checkbox\"\n            aria-checked={checked}\n            aria-disabled={option.disabled || undefined}\n            // Kept tabbable while disabled -- see optionTileClass.\n            onClick={option.disabled ? undefined : () => toggle(option.value)}\n            className={cn(\n              optionTileClass({ selected: checked, disabled: option.disabled }),\n              // Icon beside the label, left-aligned: these are named things\n              // rather than a segmented control's short verbs, so labels vary in\n              // length and a centered row reads ragged.\n              'touch-target justify-start gap-2 text-start',\n            )}\n          >\n            {option.icon && (\n              <span aria-hidden className=\"shrink-0\">\n                {option.icon}\n              </span>\n            )}\n            <span className=\"min-w-0 truncate\">{option.label}</span>\n          </button>\n        )\n      })}\n    </div>\n  )\n}\n\n// forwardRef erases the generic, so re-assert it on the export: CheckboxGroup\n// keeps `value`/`onChange` typed to the option union AND forwards a ref.\nconst CheckboxGroupWithRef = React.forwardRef(CheckboxGroupInner)\nCheckboxGroupWithRef.displayName = 'CheckboxGroup'\nexport const CheckboxGroup = CheckboxGroupWithRef as <T extends string = string>(\n  props: CheckboxGroupProps<T> & { ref?: React.Ref<HTMLDivElement> },\n) => React.ReactElement\n"
+    }
+  ],
+  "docs": "Use when the answer is a SET and the whole set should be visible and switchable in one gesture (Icon Stack's eleven export platforms). ToggleGroup is a radiogroup by construction, so it cannot express this -- hence a separate component rather than a `multiple` prop: the roles differ, every tile is tabbable because there is no current option to rove from, and `value` is an array. Both draw their tile from optionTileClass, so a pick-one and a pick-any control look identical side by side. If the set is long enough to scroll, a list of Toggle switches is the better shape. Presentational and i18n-free: pass translated labels and an aria-label.",
+  "meta": {
+    "group": "forms",
+    "related": [
+      "toggle-group",
+      "option-tile",
+      "toggle"
+    ],
+    "exports": [
+      "CheckboxGroup"
+    ],
+    "siteSlug": "checkbox-group"
+  }
+}
