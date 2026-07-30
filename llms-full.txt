@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (48)
+## Components, hooks and utilities (49)
 
 ### Navigation & layout
 
@@ -189,6 +189,14 @@ Segmented tile control for one-of-n choices, such as a light / dark / system the
 Exports: `ToggleGroup`
 
 Presentational and generic over the value type. Pass translated labels and Phosphor icons. For more options than a few tiles can hold, use Select.
+
+#### SegmentedControl  `@whiskeyjack/segmented-control`
+
+Compact pick-one control: one bordered strip, divided into segments.
+
+Exports: `SegmentedControl`
+
+Use when the choice is one row among many rather than the point of the screen -- the trailing control of a labelled row, sized to sit on a line with body text. ToggleGroup is the other shape: a grid of separate bordered tiles with the icon stacked above the label, sized to be the primary choice on a settings screen. They are two constructions rather than two sizes, since a size variant would have to move the border from per-tile to per-group, the icon from stacked to inline, and the layout from a gap-separated grid to a joined strip. Behaviour is deliberately identical -- same radiogroup role, same roving tabIndex, same arrow-key wrap-around -- and a test pins the two against each other, because a control that looks different should not also act different. The optional icon is any node: a Phosphor glyph usually, or a thumbnail when the label alone cannot say what is being chosen. Presentational and i18n-free: pass translated labels and an aria-label.
 
 ### Overlays & feedback
 

@@ -456,6 +456,25 @@
       ]
     },
     {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "SegmentedControl",
+      "description": "Compact pick-one control: one bordered strip, divided into segments.",
+      "categories": [
+        "forms"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "components/ui/segmented-control.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "select",
       "type": "registry:ui",
       "title": "Select",
