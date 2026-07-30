@@ -464,6 +464,7 @@
         "forms"
       ],
       "registryDependencies": [
+        "https://whiskeyjack.net/r/compact-control.json",
         "https://whiskeyjack.net/r/merge-refs.json",
         "https://whiskeyjack.net/r/utils.json"
       ],
@@ -636,6 +637,24 @@
       "files": [
         {
           "path": "lib/announce.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "compact-control",
+      "type": "registry:lib",
+      "title": "compactControlClass",
+      "description": "The geometry of a compact control: a small pill, chip or segment that sits on a line with body text.",
+      "categories": [
+        "utilities"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "lib/compact-control.ts",
           "type": "registry:lib"
         }
       ]
