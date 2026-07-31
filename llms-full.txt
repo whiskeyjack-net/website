@@ -410,7 +410,7 @@ The theme engine: light, dark, system, and OLED, with persistence and theme-colo
 
 Exports: `useTheme`
 
-Use this instead of hand-rolling matchMedia listeners, dark-class toggling, or theme-color meta updates. Two modes: uncontrolled (pass storageKey and the hook owns localStorage) or controlled (pass mode from your own settings store). The theme color derives from the background tokens, so a token change reaches the meta tag with no per-app edit.
+Use this instead of hand-rolling matchMedia listeners, dark-class toggling, or theme-color meta updates. Two modes: uncontrolled (pass storageKey and the hook owns localStorage) or controlled (pass mode from your own settings store). The OLED overlay follows the same split, independently: omit extraDark and the hook persists it under `${storageKey}-extra-dark` and hands back setExtraDark, so a Layout that applies the class and a Settings page that sets it stay in sync with no shared parent; pass extraDark and your store owns it. The theme color derives from the background tokens, so a token change reaches the meta tag with no per-app edit.
 
 #### cn  `@whiskeyjack/utils`
 
