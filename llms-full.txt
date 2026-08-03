@@ -156,7 +156,7 @@ Drag-to-reorder list with an accessible arrow-button fallback, so it works by po
 
 Exports: `ReorderList`
 
-Give it items, getId, renderLabel, and onReorder, plus translated moveUpLabel and moveDownLabel for the buttons. For long lists pass className="max-h-72 overflow-y-auto pr-1": dragging auto-scrolls natively and arrow moves scroll the moved item into view.
+Give it items, getId, renderLabel, and onReorder, plus translated moveUpLabel and moveDownLabel for the buttons. For long lists pass className="max-h-72 overflow-y-auto pr-1": dragging auto-scrolls and arrow moves scroll the moved item into view. On touch the drag handle owns the gesture and the rest of the row still scrolls, so a capped list inside a drawer stays scrollable.
 
 #### Select  `@whiskeyjack/select`
 
