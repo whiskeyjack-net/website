@@ -264,7 +264,7 @@ The elevated surface primitive, with header, title, description, content, and fo
 
 Exports: `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`
 
-Use Card to group related content into a panel. The semantic tokens keep it correct in light, dark, and OLED with no per-card styling, and --shadow-card is its standard elevation.
+Use Card to group related content into a panel. The semantic tokens keep it correct in light, dark, and OLED with no per-card styling, and --shadow-card is its standard elevation. CardContent takes a density: default (p-6 pt-0) pairs with a CardHeader, which supplies the top padding; compact (p-5 pt-3) is for a card with no header whose content leads with its own heading, so it needs that top padding back. Reach for compact instead of hand-writing the padding on stacked self-titled cards.
 
 #### ProgressBar  `@whiskeyjack/progress-bar`
 
