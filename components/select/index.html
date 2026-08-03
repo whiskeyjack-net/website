@@ -5,6 +5,10 @@
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
+    <!-- RFC 9727 defines two ways to find an API catalog: the well-known URI and
+         this link relation. The .json twin is named here because it is the one
+         GitHub Pages serves as JSON -- see the note in vite.config.ts. -->
+    <link rel="api-catalog" href="/.well-known/api-catalog.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Styled native select." />
     <meta name="author" content="Whiskeyjack" />

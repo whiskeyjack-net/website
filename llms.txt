@@ -1,0 +1,28 @@
+# Whiskeyjack
+
+> A Tauri-first design system and design language: thumb-first components with
+> Metro-style pivot navigation, built for small, offline-first personal apps that
+> ship one web codebase to desktop and mobile via Tauri. Every component was
+> hardened across a family of real, shipping apps before extraction.
+
+## Design system
+
+- [Full component reference](https://whiskeyjack.net/llms-full.txt): every component and hook, with prose on which to reach for and what not to hand-roll. Generated from the same manifest that builds the registry, so it cannot drift from the code.
+- [Component gallery](https://whiskeyjack.net/components/): the same components as live, interactive demos.
+- [shadcn registry catalog](https://whiskeyjack.net/r/registry.json): machine-readable index. Individual items are at `https://whiskeyjack.net/r/<name>.json` and resolve their own dependencies, so `npx shadcn add https://whiskeyjack.net/r/<name>.json` works without a namespace.
+
+## Packages
+
+- `@whiskeyjack-net/design-system` -- tokens, Tailwind preset, React components.
+- `@whiskeyjack-net/i18n` -- the shared react-i18next bootstrap.
+- `@whiskeyjack-net/tauri` -- the desktop/mobile app-shell layer, inert on web.
+- `npm create whiskeyjack@latest` -- scaffolds a project wired to all three.
+
+## Apps
+
+- [App directory](https://whiskeyjack.net/apps/): the apps the system is built and tested on.
+
+## Optional
+
+- [Support](https://whiskeyjack.net/support/)
+- [Privacy](https://whiskeyjack.net/privacy/)

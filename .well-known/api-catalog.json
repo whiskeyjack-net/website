@@ -1,0 +1,26 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://whiskeyjack.net/r/registry.json",
+      "service-desc": [
+        {
+          "href": "https://whiskeyjack.net/r/registry.json",
+          "type": "application/json",
+          "title": "Whiskeyjack component registry catalog"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://whiskeyjack.net/components/",
+          "type": "text/html",
+          "title": "Component gallery with live demos"
+        },
+        {
+          "href": "https://whiskeyjack.net/llms-full.txt",
+          "type": "text/plain",
+          "title": "Full component reference for agents"
+        }
+      ]
+    }
+  ]
+}
