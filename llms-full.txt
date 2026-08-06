@@ -1,4 +1,4 @@
-# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.16.0)
+# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.17.0)
 
 A Tauri-first design system and design language: thumb-first components with
 Metro-style pivot navigation, built for small, offline-first personal apps that
@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (50)
+## Components, hooks and utilities (51)
 
 ### Navigation & layout
 
@@ -370,7 +370,7 @@ Move focus to the main content on route change, so keyboard and screen-reader us
 
 Exports: `useRouteFocus`
 
-Point it at the AppMain ref, which forwards its ref for exactly this. Required for any client-side-routed app to meet WCAG focus-order expectations.
+Point it at the AppMain ref, which forwards its ref for exactly this. Required for any client-side-routed app to meet WCAG focus-order expectations. It focuses with preventScroll, so it leaves the scroll position alone by design – pair it with useScrollReset on the same key to arrive at the top of the new page.
 
 #### useScrollFade  `@whiskeyjack/use-scroll-fade`
 
@@ -387,6 +387,14 @@ Scroll metrics (thumb size, position, visibility) that drive ScrollIndicator.
 Exports: `useScrollIndicator`
 
 ScrollIndicator wraps this. Use the hook directly only for a custom thumb. It auto-hides ~800ms after scrolling stops and refreshes on ResizeObserver and MutationObserver events.
+
+#### useScrollRegion / useScrollReset  `@whiskeyjack/use-scroll-region`
+
+Scroll the app's real scroll region back to the top – on navigation, or on demand – whichever scroller the Layout chose.
+
+Exports: `useScrollRegion`, `useScrollReset`, `ScrollRegionProvider`
+
+In a shell-scroll app the scroller is AppMain, so window.scrollTo(0, 0) does nothing and fails silently – follow a link from halfway down a page and you land halfway down the next one. In a Layout call useScrollReset(location.pathname, mainRef) beside useRouteFocus(location.pathname, mainRef), which focuses with preventScroll and leaves scrolling to this hook; the ref is a parameter because a Layout renders AppMain and so cannot read the context AppMain publishes. Below an AppMain omit the ref and the scroller comes from that context – which is what a page wants when it swaps content in place and passes its own key rather than a route. useScrollRegion() is the imperative escape hatch for a back-to-top button. Either way both scroll models resolve themselves, so a document-scroll app needs no change.
 
 #### useSwipeNavigation  `@whiskeyjack/use-swipe-navigation`
 

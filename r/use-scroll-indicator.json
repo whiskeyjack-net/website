@@ -19,7 +19,8 @@
   "meta": {
     "group": "hooks",
     "related": [
-      "scroll-indicator"
+      "scroll-indicator",
+      "use-scroll-region"
     ],
     "exports": [
       "useScrollIndicator"
