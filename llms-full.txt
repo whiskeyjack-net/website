@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (51)
+## Components, hooks and utilities (52)
 
 ### Navigation & layout
 
@@ -115,6 +115,14 @@ Tap-again-to-confirm destructive button, with the armed state announced to assis
 Exports: `ConfirmButton`
 
 Use ConfirmButton for an inline destructive action where a modal would be heavy: delete a row, clear data, reset a setting. The first tap arms it and the second commits. Keep the confirm label explicit about what is about to happen. Pass controlled armed/onArmedChange when sibling actions must be mutually exclusive.
+
+#### DisclosureToggle  `@whiskeyjack/disclosure-toggle`
+
+Caret-and-label text button that expands and collapses an adjacent region, with aria-expanded and the touch and focus floors built in.
+
+Exports: `DisclosureToggle`
+
+Use DisclosureToggle wherever content reveals inline: a height-capped list that can drop its cap, a 'more options' tail, an inline detail panel. It is controlled - pass expanded and onExpandedChange - and takes translated expandLabel/collapseLabel. Give the revealed region an id and pass it as controls so assistive tech can follow the relationship.
 
 #### DrawerAction  `@whiskeyjack/drawer-action`
 

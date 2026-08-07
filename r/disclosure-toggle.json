@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "disclosure-toggle",
+  "type": "registry:ui",
+  "title": "DisclosureToggle",
+  "description": "Caret-and-label text button that expands and collapses an adjacent region, with aria-expanded and the touch and focus floors built in.",
+  "categories": [
+    "actions"
+  ],
+  "registryDependencies": [
+    "https://whiskeyjack.net/r/utils.json"
+  ],
+  "files": [
+    {
+      "path": "components/ui/disclosure-toggle.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/disclosure-toggle.tsx",
+      "content": "import * as React from 'react'\nimport { cn } from '@/lib/utils'\n\nexport interface DisclosureToggleProps\n  extends Omit<\n    React.ButtonHTMLAttributes<HTMLButtonElement>,\n    'onClick' | 'children' | 'type' | 'aria-expanded' | 'aria-controls'\n  > {\n  /** Whether the disclosed region is currently expanded. */\n  expanded: boolean\n  /** Called with the next state when the toggle is activated. */\n  onExpandedChange: (expanded: boolean) => void\n  /** Label shown while collapsed, e.g. the translated \"Show all\". */\n  expandLabel: string\n  /** Label shown while expanded, e.g. the translated \"Show fewer\". */\n  collapseLabel: string\n  /** id of the element this toggle reveals, exposed as `aria-controls`. */\n  controls?: string\n}\n\n/**\n * Text button that expands and collapses an adjacent region: caret + label,\n * `aria-expanded`, secondary text that strengthens on hover. Controlled – the\n * caller owns the expanded state, so the same toggle drives a height-capped\n * list, a \"more options\" tail, or an inline detail panel.\n *\n * Carries the keyboard and touch floors (`wj-focus-ring`, `.touch-target`);\n * pass `controls` whenever the revealed region can take an id.\n */\nexport const DisclosureToggle = React.forwardRef<HTMLButtonElement, DisclosureToggleProps>(\n  function DisclosureToggle(\n    { expanded, onExpandedChange, expandLabel, collapseLabel, controls, className, ...props },\n    ref,\n  ) {\n    return (\n      <button\n        ref={ref}\n        {...props}\n        type=\"button\"\n        aria-expanded={expanded}\n        aria-controls={controls}\n        onClick={() => onExpandedChange(!expanded)}\n        className={cn(\n          'wj-focus-ring touch-target inline-flex items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-colors',\n          'text-[var(--color-text-secondary-light)] dark:text-[var(--color-text-secondary-dark)]',\n          'hover:text-[var(--color-text-primary-light)] dark:hover:text-[var(--color-text-primary-dark)]',\n          className,\n        )}\n        {...props}\n      >\n        {/* Inline SVG caret so the design system stays icon-free (apps own that decision). */}\n        <svg\n          className={cn('w-4 h-4 transition-transform', expanded && 'rotate-180')}\n          viewBox=\"0 0 16 16\"\n          fill=\"none\"\n          stroke=\"currentColor\"\n          strokeWidth=\"2\"\n          strokeLinecap=\"round\"\n          strokeLinejoin=\"round\"\n          aria-hidden\n        >\n          <path d=\"M3.5 6l4.5 4.5L12.5 6\" />\n        </svg>\n        {expanded ? collapseLabel : expandLabel}\n      </button>\n    )\n  },\n)\nDisclosureToggle.displayName = 'DisclosureToggle'\n"
+    }
+  ],
+  "docs": "Use DisclosureToggle wherever content reveals inline: a height-capped list that can drop its cap, a 'more options' tail, an inline detail panel. It is controlled - pass expanded and onExpandedChange - and takes translated expandLabel/collapseLabel. Give the revealed region an id and pass it as controls so assistive tech can follow the relationship.",
+  "meta": {
+    "group": "actions",
+    "related": [
+      "confirm-button",
+      "button"
+    ],
+    "exports": [
+      "DisclosureToggle"
+    ],
+    "siteSlug": "disclosure-toggle"
+  }
+}
