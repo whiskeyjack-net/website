@@ -1,4 +1,4 @@
-# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.18.0)
+# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.19.0)
 
 A Tauri-first design system and design language: thumb-first components with
 Metro-style pivot navigation, built for small, offline-first personal apps that
@@ -276,11 +276,11 @@ Use Card to group related content into a panel. The semantic tokens keep it corr
 
 #### ProgressBar  `@whiskeyjack/progress-bar`
 
-The accent progress primitive: determinate fill, open-ended indicator, or segment accumulation against a tally.
+The accent progress primitive: determinate fill, busy sweep, open-ended indicator, or segment accumulation against a tally.
 
 Exports: `ProgressBar`
 
-Pass `value` for a determinate fill, `indeterminate` for open-ended progress, or `count` for segment accumulation. Use `label` to expose role="progressbar", or `decorative` when adjacent text already conveys the value. It renders as spans, so it is valid inside a button, which is how the TabBar underline works.
+Pass `value` for a determinate fill, `busy` for work in flight, `indeterminate` for open-ended progress, or `count` for segment accumulation. `busy` and `indeterminate` are different claims: `indeterminate` means UNBOUNDED and draws a static dotted line, while `busy` means LOADING and sweeps an accent band over the track – pair `busy` with a `value` for a run whose stages are only partly countable, so the bar holds its fill through the stage that cannot report a count. Use `label` to expose role="progressbar", or `decorative` when adjacent text already conveys the value. It renders as spans, so it is valid inside a button, which is how the TabBar underline works.
 
 #### ScrollIndicator  `@whiskeyjack/scroll-indicator`
 
