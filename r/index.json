@@ -36,6 +36,7 @@
       ],
       "registryDependencies": [
         "https://whiskeyjack.net/r/scroll-indicator.json",
+        "https://whiskeyjack.net/r/use-layout-gate.json",
         "https://whiskeyjack.net/r/utils.json"
       ],
       "files": [
