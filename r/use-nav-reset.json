@@ -1,0 +1,34 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-nav-reset",
+  "type": "registry:hook",
+  "title": "useRegisterNavReset",
+  "description": "Double-tap the nav item for the page you are already on to return to the top, then to the page's start.",
+  "categories": [
+    "hooks",
+    "navigation"
+  ],
+  "files": [
+    {
+      "path": "hooks/use-nav-reset.ts",
+      "type": "registry:hook",
+      "target": "hooks/use-nav-reset.ts",
+      "content": "import * as React from \"react\";\n\n/**\n * Double-tapping the nav item for the page you are already on takes you back to\n * the start of that page, in two steps: first the top of the scroll region,\n * then -- if the page has somewhere further back to go -- whatever it registered\n * as its start.\n *\n * The step is chosen from scroll position rather than from a second gesture\n * inside a time window, so the sequence is self-correcting: a double-tap when\n * scrolled always scrolls, and one at the top always resets.\n */\n\n/** Milliseconds within which a second activation counts as a double. */\nexport const NAV_DOUBLE_MS = 350;\n\n/** Scroll offsets below this count as \"at the top\" (sub-pixel, momentum drift). */\nconst AT_TOP_EPSILON = 4;\n\n/**\n * A page publishes its start here; the nav consumes it. The two share no\n * parent -- the nav is Layout chrome and the tabs belong to the page -- so the\n * slot is a ref rather than state: it is read at click time and never needs to\n * re-render the nav.\n */\nconst NavResetContext = React.createContext<React.MutableRefObject<(() => void) | null> | null>(\n  null,\n);\n\nexport interface NavResetProviderProps {\n  children: React.ReactNode;\n}\n\n/**\n * Installs the slot. `AppShell` renders this, so an app built on the shell has\n * it already. Without a provider `useRegisterNavReset` is inert and the nav\n * stops after the scroll step, which is what a page with no tabs wants anyway.\n */\nexport function NavResetProvider({ children }: NavResetProviderProps) {\n  const slot = React.useRef<(() => void) | null>(null);\n  return React.createElement(NavResetContext.Provider, { value: slot }, children);\n}\n\n/**\n * Registers what \"back to the start\" means for the page that calls it -- for a\n * tabbed page, selecting the first tab.\n *\n * ```tsx\n * useRegisterNavReset(() => setActiveTab(tabItems[0].id));\n * ```\n *\n * Pass `null` while the page has nowhere to go back to (already on the first\n * tab, or no tabs at all) and the nav's second step does nothing. The callback\n * is read through a ref, so an inline arrow does not re-register on every\n * render and the nav always invokes the latest one.\n */\nexport function useRegisterNavReset(fn: (() => void) | null): void {\n  const slot = React.useContext(NavResetContext);\n  const latest = React.useRef(fn);\n  latest.current = fn;\n\n  React.useEffect(() => {\n    if (!slot) return;\n    // `has` is what the nav tests to decide whether a second step exists, so it\n    // has to track the CURRENT value rather than the one at registration time.\n    const call = () => latest.current?.();\n    const entry = latest.current ? call : null;\n    slot.current = entry;\n    return () => {\n      if (slot.current === entry) slot.current = null;\n    };\n  });\n}\n\n/** The registered reset, or null. Consumed by the nav components. */\nexport function useNavReset(): React.MutableRefObject<(() => void) | null> | null {\n  return React.useContext(NavResetContext);\n}\n\n/**\n * Resolves the scroll region the same way `useScrollReset` does: an element\n * with overflow of its own is the scroller, otherwise the window is. A Layout\n * hands its `AppMain` ref to both and each figures out the scroll model.\n */\nfunction scroller(el: HTMLElement | null): { atTop: boolean; toTop: () => void } {\n  if (el && el.scrollHeight > el.clientHeight) {\n    return {\n      atTop: el.scrollTop <= AT_TOP_EPSILON,\n      toTop: () => el.scrollTo({ top: 0 }),\n    };\n  }\n  return {\n    atTop: window.scrollY <= AT_TOP_EPSILON,\n    toTop: () => window.scrollTo(0, 0),\n  };\n}\n\n/**\n * Returns the handler a nav item fires on activation. It only acts on the\n * SECOND activation within `NAV_DOUBLE_MS`, and only for the item whose page is\n * already showing -- activating any other item is a navigation, which owns the\n * gesture.\n */\nexport function useNavDoubleActivate(\n  scrollRef?: React.RefObject<HTMLElement | null>,\n): (active: boolean) => void {\n  const resetSlot = useNavReset();\n  const lastAt = React.useRef(0);\n\n  return React.useCallback(\n    (active: boolean) => {\n      if (!active) {\n        lastAt.current = 0;\n        return;\n      }\n      const now = Date.now();\n      if (now - lastAt.current > NAV_DOUBLE_MS) {\n        lastAt.current = now;\n        return;\n      }\n      // Consume the pair, so a third tap starts a new one rather than\n      // triggering again off the second.\n      lastAt.current = 0;\n\n      const region = scroller(scrollRef?.current ?? null);\n      if (!region.atTop) {\n        region.toTop();\n        return;\n      }\n      resetSlot?.current?.();\n    },\n    [resetSlot, scrollRef],\n  );\n}\n"
+    }
+  ],
+  "docs": "Two steps, chosen by scroll position rather than by a second gesture in a time window, so the sequence is self-correcting: a double-tap while scrolled goes to the top, and one already at the top runs whatever the page registered as its start. Pass the AppMain ref as scrollRef to HeaderNav and MobileBottomNav – they are Layout chrome rendered alongside AppMain, so they sit above the scroll region it publishes and cannot read it, the same reason useScrollReset takes a ref. In a tabbed page call useRegisterNavReset(() => setActiveTab(first)), and pass null when there is nowhere further back to go so the second step stays inert. AppShell installs the provider; without one the gesture stops after the scroll step, which is what a page with no tabs wants.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "app-shell",
+      "mobile-bottom-nav",
+      "use-scroll-region"
+    ],
+    "exports": [
+      "useRegisterNavReset",
+      "NavResetProvider",
+      "NAV_DOUBLE_MS"
+    ],
+    "siteSlug": "use-nav-reset"
+  }
+}

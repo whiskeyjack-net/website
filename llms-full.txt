@@ -1,4 +1,4 @@
-# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.19.1)
+# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.20.0)
 
 A Tauri-first design system and design language: thumb-first components with
 Metro-style pivot navigation, built for small, offline-first personal apps that
@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (52)
+## Components, hooks and utilities (53)
 
 ### Navigation & layout
 
@@ -355,6 +355,14 @@ Read the wide / xlwide layout gates in JS, for a decision CSS cannot express.
 Exports: `useLayoutGate`, `LAYOUT_GATES`
 
 Reach for this only when ONE instance of an expensive component has to move between two places in the tree -- Icon Stack's live preview, which runs the real icon pipeline and would run it twice if it were rendered inline and in the rail with one hidden. Everything else should stay in CSS: render both the TabBar and the SidebarTabs and let the wide:/xlwide: variants hide one. Never hand-roll matchMedia('(min-width: 1280px)') for this -- the gates are pointer- and orientation-aware, so a plain width query disagrees with the CSS on a landscape tablet.
+
+#### useRegisterNavReset  `@whiskeyjack/use-nav-reset`
+
+Double-tap the nav item for the page you are already on to return to the top, then to the page's start.
+
+Exports: `useRegisterNavReset`, `NavResetProvider`, `NAV_DOUBLE_MS`
+
+Two steps, chosen by scroll position rather than by a second gesture in a time window, so the sequence is self-correcting: a double-tap while scrolled goes to the top, and one already at the top runs whatever the page registered as its start. Pass the AppMain ref as scrollRef to HeaderNav and MobileBottomNav – they are Layout chrome rendered alongside AppMain, so they sit above the scroll region it publishes and cannot read it, the same reason useScrollReset takes a ref. In a tabbed page call useRegisterNavReset(() => setActiveTab(first)), and pass null when there is nowhere further back to go so the second step stays inert. AppShell installs the provider; without one the gesture stops after the scroll step, which is what a page with no tabs wants.
 
 #### usePullToRefresh  `@whiskeyjack/use-pull-to-refresh`
 
