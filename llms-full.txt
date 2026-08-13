@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (53)
+## Components, hooks and utilities (56)
 
 ### Navigation & layout
 
@@ -205,6 +205,14 @@ Compact pick-one control: one bordered strip, divided into segments.
 Exports: `SegmentedControl`
 
 Use when the choice is one row among many rather than the point of the screen -- the trailing control of a labelled row, sized to sit on a line with body text. ToggleGroup is the other shape: a grid of separate bordered tiles with the icon stacked above the label, sized to be the primary choice on a settings screen. They are two constructions rather than two sizes, since a size variant would have to move the border from per-tile to per-group, the icon from stacked to inline, and the layout from a gap-separated grid to a joined strip. Behaviour is deliberately identical -- same radiogroup role, same roving tabIndex, same arrow-key wrap-around -- and a test pins the two against each other, because a control that looks different should not also act different. The optional icon is any node: a Phosphor glyph usually, or a thumbnail when the label alone cannot say what is being chosen. Pass hideLabels when a pair of glyphs IS the vocabulary -- a sun and a moon, a contain and a cover arrow -- and spelling it out costs more room than it earns; label stays required and becomes each segment aria-label and title, per the icon-only rule. It is all-or-nothing on purpose, since a strip mixing labelled and bare segments reads as one of them having failed to render. Presentational and i18n-free: pass translated labels and an aria-label.
+
+#### SearchField  `@whiskeyjack/search-field`
+
+Search pill: a rounded-full text input with a leading magnifier and a trailing clear button.
+
+Exports: `SearchField`
+
+Use this instead of hand-rolling the pill-with-magnifier-and-clear recipe. Controlled (value/onChange) and i18n-agnostic - pass translated label, clearLabel and placeholder; label is the accessible name, since a placeholder is not a label. Pass tabbable={shown} when a HeaderStandIn keeps it mounted but collapsed, so a zero-width field never catches Tab. size sm (h-9) sits flush in dense chrome; md (h-10) matches the control baseline.
 
 ### Overlays & feedback
 
@@ -443,6 +451,14 @@ Tailwind class merging (clsx plus tailwind-merge).
 Exports: `cn`
 
 The class-merging helper every component uses to merge a caller className onto its root. Required by most registry items.
+
+#### useStandInTarget  `@whiskeyjack/use-stand-in-target`
+
+Watches a field's primary instance and reports when it scrolls out of view, so a HeaderStandIn can speak for it.
+
+Exports: `useStandInTarget`
+
+Returns a callback ref - attach it to the element wrapping the field's primary instance. Reports through onInViewChange, and reports true when the target detaches, so a stand-in never outlives its subject. The IntersectionObserver root is the nearest scrollable ancestor; pass topInset for chrome overlaying the scroller's top (a floating header), or the field counts as visible the whole time it sits behind the frost.
 
 ## Conventions
 

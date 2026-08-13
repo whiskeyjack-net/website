@@ -1,0 +1,31 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-stand-in-target",
+  "type": "registry:hook",
+  "title": "useStandInTarget",
+  "description": "Watches a field's primary instance and reports when it scrolls out of view, so a HeaderStandIn can speak for it.",
+  "categories": [
+    "hooks",
+    "layout"
+  ],
+  "files": [
+    {
+      "path": "hooks/use-stand-in-target.ts",
+      "type": "registry:hook",
+      "target": "hooks/use-stand-in-target.ts",
+      "content": "import * as React from 'react'\n\nexport interface UseStandInTargetOptions {\n  /** Height in px of chrome overlaying the top of the target's scroller (a\n   * floating header): the target counts as away once it slips behind it,\n   * while a plain intersection would call it visible the whole time it sits\n   * under the frost. 0 when nothing overlays the scroller. */\n  topInset?: number\n  /** Visibility reports. Also called with `true` when the target detaches\n   * (unmount, layout-gate collapse, route change), so a stand-in never\n   * outlives its subject. */\n  onInViewChange: (inView: boolean) => void\n}\n\n// The nearest scrollable ancestor is the IntersectionObserver root: the\n// element clips there, not at the viewport. Falls back to the viewport for a\n// document-scrolled page.\nfunction nearestScroller(el: HTMLElement): Element | null {\n  let node = el.parentElement\n  while (node) {\n    const { overflowY } = getComputedStyle(node)\n    if (overflowY === 'auto' || overflowY === 'scroll') return node\n    node = node.parentElement\n  }\n  return null\n}\n\n/**\n * Watches a field's primary instance and reports whether it is in view inside\n * its own scroller, so a `HeaderStandIn` can grow in while it is scrolled\n * away. Returns a callback ref -- attach it to the element wrapping the\n * primary instance. A callback ref rather than an effect because the target\n * typically mounts and unmounts with a portal or layout gate; the observer\n * attaches whenever the node appears and detaching resets the state.\n * `onInViewChange` is read through a ref, so an inline arrow does not\n * re-observe each render; changing `topInset` re-attaches with the new inset.\n */\nexport function useStandInTarget({\n  topInset = 0,\n  onInViewChange,\n}: UseStandInTargetOptions): (node: HTMLElement | null) => void {\n  const onChangeRef = React.useRef(onInViewChange)\n  React.useEffect(() => {\n    onChangeRef.current = onInViewChange\n  }, [onInViewChange])\n\n  const observerRef = React.useRef<IntersectionObserver | null>(null)\n  return React.useCallback(\n    (node: HTMLElement | null) => {\n      observerRef.current?.disconnect()\n      observerRef.current = null\n      if (!node) {\n        onChangeRef.current(true)\n        return\n      }\n      const observer = new IntersectionObserver(\n        ([entry]) => onChangeRef.current(entry.isIntersecting),\n        {\n          root: nearestScroller(node),\n          rootMargin: `-${topInset}px 0px 0px 0px`,\n          threshold: 0,\n        },\n      )\n      observer.observe(node)\n      observerRef.current = observer\n    },\n    [topInset],\n  )\n}\n"
+    }
+  ],
+  "docs": "Returns a callback ref - attach it to the element wrapping the field's primary instance. Reports through onInViewChange, and reports true when the target detaches, so a stand-in never outlives its subject. The IntersectionObserver root is the nearest scrollable ancestor; pass topInset for chrome overlaying the scroller's top (a floating header), or the field counts as visible the whole time it sits behind the frost.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "search-field",
+      "header-stand-in"
+    ],
+    "exports": [
+      "useStandInTarget"
+    ],
+    "siteSlug": "use-stand-in-target"
+  }
+}

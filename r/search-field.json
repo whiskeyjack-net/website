@@ -1,0 +1,37 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "search-field",
+  "type": "registry:ui",
+  "title": "SearchField",
+  "description": "Search pill: a rounded-full text input with a leading magnifier and a trailing clear button.",
+  "categories": [
+    "forms"
+  ],
+  "dependencies": [
+    "class-variance-authority"
+  ],
+  "registryDependencies": [
+    "https://whiskeyjack.net/r/utils.json"
+  ],
+  "files": [
+    {
+      "path": "components/ui/search-field.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/search-field.tsx",
+      "content": "import * as React from 'react'\nimport { cva } from 'class-variance-authority'\nimport { cn } from '@/lib/utils'\n\nconst inputVariants = cva(\n  cn(\n    'wj-focus-ring w-full rounded-full pl-9 pr-8 text-sm',\n    'bg-[var(--color-surface-light)] dark:bg-[var(--color-surface-dark)]',\n    'border border-[var(--color-border-light)] dark:border-[var(--color-border-dark)]',\n    'text-[var(--color-text-primary-light)] dark:text-[var(--color-text-primary-dark)]',\n    'placeholder:text-[var(--color-text-muted-light)] dark:placeholder:text-[var(--color-text-muted-dark)]',\n  ),\n  {\n    variants: {\n      size: {\n        sm: 'h-9',\n        md: 'h-10',\n      },\n    },\n    defaultVariants: { size: 'md' },\n  },\n)\n\nexport interface SearchFieldProps {\n  value: string\n  onChange: (value: string) => void\n  /** Accessible name for the input -- the placeholder is not a label. */\n  label: string\n  /** Accessible name AND hover title for the icon-only clear button. */\n  clearLabel: string\n  placeholder?: string\n  /** False takes the field (and its clear button) out of the tab order while\n   * a wrapper keeps it mounted but visually collapsed -- a zero-width input\n   * still catches Tab, and a focus ring on an invisible field reads as the\n   * focus having vanished. Pair with `HeaderStandIn`'s `shown`. */\n  tabbable?: boolean\n  /** `md` (h-10) matches the DS control baseline; `sm` (h-9) sits flush in\n   * denser chrome (a 64px header row, a sidebar rail). */\n  size?: 'sm' | 'md'\n  autoFocus?: boolean\n  className?: string\n}\n\n/**\n * Search pill: a rounded-full text input with a leading magnifier and a\n * trailing clear button that appears once there is anything to clear.\n * Controlled and i18n-agnostic -- pass translated `label`, `clearLabel` and\n * `placeholder`. Inline SVG glyphs so the design system stays icon-free\n * (apps own that decision).\n */\nexport const SearchField = React.forwardRef<HTMLDivElement, SearchFieldProps>(\n  (\n    { value, onChange, label, clearLabel, placeholder, tabbable = true, size, autoFocus, className },\n    ref,\n  ) => {\n    const tabIndex = tabbable ? undefined : -1\n    return (\n      <div ref={ref} className={cn('relative', className)}>\n        <svg\n          className=\"absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-[var(--color-text-muted-light)] dark:text-[var(--color-text-muted-dark)]\"\n          viewBox=\"0 0 16 16\"\n          fill=\"none\"\n          stroke=\"currentColor\"\n          strokeWidth=\"2\"\n          strokeLinecap=\"round\"\n          aria-hidden\n        >\n          <circle cx=\"7\" cy=\"7\" r=\"4.5\" />\n          <path d=\"M10.5 10.5L14 14\" />\n        </svg>\n        <input\n          type=\"text\"\n          value={value}\n          autoFocus={autoFocus}\n          tabIndex={tabIndex}\n          onChange={(e) => onChange(e.target.value)}\n          placeholder={placeholder}\n          aria-label={label}\n          className={inputVariants({ size })}\n        />\n        {value && (\n          <button\n            type=\"button\"\n            onClick={() => onChange('')}\n            aria-label={clearLabel}\n            title={clearLabel}\n            tabIndex={tabIndex}\n            className=\"wj-focus-ring absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-[var(--color-text-muted-light)] dark:text-[var(--color-text-muted-dark)] hover:text-[var(--color-text-primary-light)] dark:hover:text-[var(--color-text-primary-dark)]\"\n          >\n            <svg\n              className=\"w-3.5 h-3.5\"\n              viewBox=\"0 0 14 14\"\n              fill=\"none\"\n              stroke=\"currentColor\"\n              strokeWidth=\"2\"\n              strokeLinecap=\"round\"\n              aria-hidden\n            >\n              <path d=\"M3 3l8 8M11 3l-8 8\" />\n            </svg>\n          </button>\n        )}\n      </div>\n    )\n  },\n)\nSearchField.displayName = 'SearchField'\n"
+    }
+  ],
+  "docs": "Use this instead of hand-rolling the pill-with-magnifier-and-clear recipe. Controlled (value/onChange) and i18n-agnostic - pass translated label, clearLabel and placeholder; label is the accessible name, since a placeholder is not a label. Pass tabbable={shown} when a HeaderStandIn keeps it mounted but collapsed, so a zero-width field never catches Tab. size sm (h-9) sits flush in dense chrome; md (h-10) matches the control baseline.",
+  "meta": {
+    "group": "forms",
+    "related": [
+      "input",
+      "header-stand-in",
+      "use-stand-in-target"
+    ],
+    "exports": [
+      "SearchField"
+    ],
+    "siteSlug": "search-field"
+  }
+}

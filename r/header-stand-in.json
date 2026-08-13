@@ -1,0 +1,35 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "header-stand-in",
+  "type": "registry:ui",
+  "title": "HeaderStandIn",
+  "description": "Header copy of a field whose primary lives in a scroller: grows in while the primary is scrolled away, collapses when it returns.",
+  "categories": [
+    "layout"
+  ],
+  "registryDependencies": [
+    "https://whiskeyjack.net/r/merge-refs.json",
+    "https://whiskeyjack.net/r/utils.json"
+  ],
+  "files": [
+    {
+      "path": "components/ui/header-stand-in.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/header-stand-in.tsx",
+      "content": "import * as React from 'react'\nimport { cn } from '@/lib/utils'\nimport { useMergedRefs } from '@/lib/merge-refs'\n\nexport interface HeaderStandInProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** True while the primary instance is scrolled away and this copy speaks\n   * for it. Pass the same value to the child field's `tabbable` (inverted\n   * nowhere -- `tabbable={shown}`). */\n  shown: boolean\n}\n\n/**\n * Header stand-in for a field whose primary instance lives in a scrollable\n * region: grows in via max-width/opacity while the primary is scrolled away\n * (see `useStandInTarget`) and collapses back when it returns -- width rather\n * than mount/unmount, so the nav beside it never jumps. Collapsed it is\n * aria-hidden and click-through, evicts any focus still inside it (a caret\n * in an invisible field reads as focus having vanished), and the child\n * should be untabbable too (its `tabbable={shown}`), since a zero-width\n * field still catches Tab.\n *\n * Owns only the animated wrapper. The responsive gate and the slot in the\n * header row (e.g. `hidden wide:flex flex-1 justify-center min-w-0 px-2`)\n * stay with the app -- the breakpoint the stand-in exists at differs per\n * layout. The collapsed width is an inline style rather than a class, so a\n * caller `className` carrying its own `max-w-*` (the shown width) cannot\n * knock it out through the tailwind-merge. The p-1.5/-m-1.5 pair keeps the\n * clip edge 6px off the child on every side: the focus ring (2px outline at\n * 2px offset) draws outside the child's box and the overflow-hidden the\n * collapse needs would clip it flush; 6px rather than the exact 4px so\n * fractional display scaling never shaves the ring's antialiased edge. The\n * negative margin cancels the padding's footprint, and the collapsed width\n * still nets to zero.\n */\nexport const HeaderStandIn = React.forwardRef<HTMLDivElement, HeaderStandInProps>(\n  ({ shown, className, style, children, ...props }, ref) => {\n    const innerRef = React.useRef<HTMLDivElement>(null)\n    const mergedRef = useMergedRefs(innerRef, ref)\n\n    React.useEffect(() => {\n      if (shown) return\n      const el = innerRef.current\n      const active = document.activeElement\n      if (el && active instanceof HTMLElement && el.contains(active)) active.blur()\n    }, [shown])\n\n    return (\n      <div\n        ref={mergedRef}\n        aria-hidden={!shown}\n        className={cn(\n          'w-full overflow-hidden p-1.5 -m-1.5 transition-[max-width,opacity] duration-300 motion-reduce:transition-none',\n          'max-w-sm',\n          shown ? 'opacity-100' : 'opacity-0 pointer-events-none',\n          className,\n        )}\n        style={{ ...style, maxWidth: shown ? style?.maxWidth : '0px' }}\n        {...props}\n      >\n        {children}\n      </div>\n    )\n  },\n)\nHeaderStandIn.displayName = 'HeaderStandIn'\n"
+    }
+  ],
+  "docs": "Wrap the header copy of a field whose primary instance scrolls away (pair with useStandInTarget). Animates max-width/opacity so the nav beside it never jumps; collapsed it is aria-hidden and click-through - pass shown to the child field's tabbable too. Owns only the animated wrapper: the responsive gate and the flex slot in the header row stay with the app. The built-in clip clearance keeps the focus ring unclipped inside the overflow-hidden the collapse needs.",
+  "meta": {
+    "group": "layout",
+    "related": [
+      "search-field",
+      "use-stand-in-target",
+      "app-shell"
+    ],
+    "exports": [
+      "HeaderStandIn"
+    ],
+    "siteSlug": "header-stand-in"
+  }
+}
