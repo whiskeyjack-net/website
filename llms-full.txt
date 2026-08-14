@@ -1,4 +1,4 @@
-# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.21.0)
+# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.22.0)
 
 A Tauri-first design system and design language: thumb-first components with
 Metro-style pivot navigation, built for small, offline-first personal apps that
@@ -212,7 +212,7 @@ Search pill: a rounded-full text input with a leading magnifier and a trailing c
 
 Exports: `SearchField`
 
-Use this instead of hand-rolling the pill-with-magnifier-and-clear recipe. Controlled (value/onChange) and i18n-agnostic - pass translated label, clearLabel and placeholder; label is the accessible name, since a placeholder is not a label. Pass tabbable={shown} when a HeaderStandIn keeps it mounted but collapsed, so a zero-width field never catches Tab. size sm (h-9) sits flush in dense chrome; md (h-10) matches the control baseline.
+Use this instead of hand-rolling the pill-with-magnifier-and-clear recipe. Controlled (value/onChange) and i18n-agnostic - pass translated label, clearLabel and placeholder; label is the accessible name, since a placeholder is not a label. Pass tabbable={shown} when a HeaderStandIn keeps it mounted but collapsed, so a zero-width field never catches Tab. size sm (h-9) sits flush in dense chrome; md (h-10) matches the control baseline - applies only to variant solid (the default). variant frosted is a floating blurred pill for a bar over scrolling content, always h-12 regardless of size.
 
 ### Overlays & feedback
 
