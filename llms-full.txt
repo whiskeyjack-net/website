@@ -1,4 +1,4 @@
-# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.22.1)
+# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.23.0)
 
 A Tauri-first design system and design language: thumb-first components with
 Metro-style pivot navigation, built for small, offline-first personal apps that
@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (56)
+## Components, hooks and utilities (58)
 
 ### Navigation & layout
 
@@ -403,6 +403,14 @@ Vertical edge-fade masks for a height-capped scrollable panel; returns the CSS c
 Exports: `useScrollFade`
 
 The vertical counterpart to useTabBarFade, for reorder lists and icon grids. Apply the returned class to the scroll container. ReorderList integrates it already. Applies at every viewport size.
+
+#### useSlidingIndicator  `@whiskeyjack/use-sliding-indicator`
+
+Measures the active item in a tab-like container so one element can animate between items instead of the highlight jumping.
+
+Exports: `useSlidingIndicator`
+
+Shared by TabBar (underline), SegmentedControl (fill pill) and SidebarTabs (highlight), so the three cannot travel at different speeds. Pass axis 'y' for a vertical list. Returns null until a measurement lands, so render no indicator on the first paint rather than one at zero; a hidden container measures 0 and keeps its last good numbers instead of collapsing.
 
 #### useScrollIndicator  `@whiskeyjack/use-scroll-indicator`
 

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "beam",
+  "type": "registry:ui",
+  "title": "Beam",
+  "description": "A travelling light around an element's edge, for the one thing on a screen that needs the eye.",
+  "categories": [
+    "feedback"
+  ],
+  "registryDependencies": [
+    "https://whiskeyjack.net/r/utils.json"
+  ],
+  "files": [
+    {
+      "path": "components/ui/beam.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/beam.tsx",
+      "content": "import * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\nexport interface BeamProps extends React.HTMLAttributes<HTMLDivElement> {\n  /** Runs the beam. Off, the wrapper is inert and costs nothing visually. */\n  active?: boolean;\n  /**\n   * Which urgency the light carries. `accent` is a nudge, `warning` a\n   * deadline approaching, `error` one about to pass.\n   */\n  tone?: \"accent\" | \"warning\" | \"error\";\n  /**\n   * Seconds for one full turn. Slower reads as calmer; below ~2s it starts to\n   * feel like a loading spinner rather than a highlight.\n   */\n  durationSec?: number;\n  children: React.ReactNode;\n}\n\n/**\n * Draws a travelling light around whatever it wraps, for the one thing on a\n * screen that needs the eye. Built for a `Card` -- a goal about to break its\n * streak, a check-in whose window is closing -- but it wraps anything with a\n * border radius.\n *\n * ```tsx\n * <Beam active={goal.atRisk} tone=\"warning\" className=\"rounded-xl\">\n *   <Card>...</Card>\n * </Beam>\n * ```\n *\n * **Match the radius.** The layers inherit `border-radius` from this wrapper,\n * which defaults to `rounded-xl` (a `Card`'s). Pass a `className` with the\n * child's radius when it differs, or the light traces a shape the content does\n * not have.\n *\n * **The beam carries no meaning on its own.** It is decoration drawn in\n * pseudo-elements, invisible to assistive tech, and tone is colour alone --\n * so whatever makes this element urgent has to be in its text too. Reduced\n * motion holds the light still rather than removing it, which keeps the cue\n * for anyone who cannot use the movement.\n *\n * **One at a time.** Two of these on a screen compete, and the effect is worth\n * nothing once it is not the only one.\n */\nconst Beam = React.forwardRef<HTMLDivElement, BeamProps>(\n  (\n    { active = false, tone = \"accent\", durationSec, className, style, children, ...props },\n    ref,\n  ) => (\n    <div\n      ref={ref}\n      className={cn(\"wj-beam rounded-xl\", className)}\n      data-active={active}\n      data-tone={tone}\n      style={\n        durationSec === undefined\n          ? style\n          : ({ \"--wj-beam-duration\": `${durationSec}s`, ...style } as React.CSSProperties)\n      }\n      {...props}\n    >\n      {children}\n    </div>\n  ),\n);\nBeam.displayName = \"Beam\";\n\nexport { Beam };\n"
+    }
+  ],
+  "docs": "Wrap the element that has turned urgent -- a goal about to break its streak, a check-in whose window is closing. Built for a Card but wraps anything with a border radius; the layers inherit border-radius from the wrapper, so pass the child's radius when it is not rounded-xl. The light is decoration in pseudo-elements, invisible to assistive tech, and tone is colour alone, so what makes the element urgent must be in its text too. Reduced motion holds the light still rather than removing it. Use one at a time: a second one on screen costs both of them their effect.",
+  "meta": {
+    "group": "feedback",
+    "related": [
+      "card",
+      "notice",
+      "toast"
+    ],
+    "exports": [
+      "Beam"
+    ],
+    "siteSlug": "beam"
+  }
+}
