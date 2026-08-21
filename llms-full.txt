@@ -1,4 +1,4 @@
-# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.23.0)
+# Whiskeyjack Design System (@whiskeyjack-net/design-system v0.24.0)
 
 A Tauri-first design system and design language: thumb-first components with
 Metro-style pivot navigation, built for small, offline-first personal apps that
@@ -98,7 +98,7 @@ The action button. Labels wrap to two lines rather than overflowing, so long tra
 
 Exports: `Button`
 
-Use the default size (40px) for every action button in an app; it matches size="icon" so text and icon buttons align. Reserve size="lg" for hero and landing CTAs. Avoid size="sm", which breaks rhythm against neighbouring default buttons. The accent variant is the primary action, outline the secondary one.
+Use the default size (44px) for every action button in an app; it matches size="icon" and the shared control height Input, Select, SearchField, option tiles and SidebarTabs all take, so a row of mixed controls lines up. Reserve size="lg" for hero and landing CTAs, and size="sm" (36px) for dense chrome such as a card-hover action. The accent variant is the primary action and secondary the bordered one; selection is the surface that reads as selectable rather than actionable, and takes its chosen state from aria-pressed.
 
 #### ButtonRow  `@whiskeyjack/button-row`
 

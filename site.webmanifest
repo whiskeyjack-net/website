@@ -4,8 +4,8 @@
   "description": "A collection of apps and utilities for everyday use.",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#f2f0ed",
-  "theme_color": "#f2f0ed",
+  "background_color": "#e9e9e7",
+  "theme_color": "#e9e9e7",
   "icons": [
     {
       "src": "/pwa/icon-192.png",
