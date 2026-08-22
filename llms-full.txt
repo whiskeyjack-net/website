@@ -420,13 +420,13 @@ Exports: `useScrollIndicator`
 
 ScrollIndicator wraps this. Use the hook directly only for a custom thumb. It auto-hides ~800ms after scrolling stops and refreshes on ResizeObserver and MutationObserver events.
 
-#### useScrollRegion / useScrollReset  `@whiskeyjack/use-scroll-region`
+#### useScrollRegion / useScrollReset / useScrollMemory  `@whiskeyjack/use-scroll-region`
 
-Scroll the app's real scroll region back to the top – on navigation, or on demand – whichever scroller the Layout chose.
+Scroll the app's real scroll region – to the top on a first visit, back to where you left it on a return – whichever scroller the Layout chose.
 
-Exports: `useScrollRegion`, `useScrollReset`, `ScrollRegionProvider`
+Exports: `useScrollRegion`, `useScrollReset`, `useScrollMemory`, `ScrollRegionProvider`
 
-In a shell-scroll app the scroller is AppMain, so window.scrollTo(0, 0) does nothing and fails silently – follow a link from halfway down a page and you land halfway down the next one. In a Layout call useScrollReset(location.pathname, mainRef) beside useRouteFocus(location.pathname, mainRef), which focuses with preventScroll and leaves scrolling to this hook; the ref is a parameter because a Layout renders AppMain and so cannot read the context AppMain publishes. Below an AppMain omit the ref and the scroller comes from that context – which is what a page wants when it swaps content in place and passes its own key rather than a route. useScrollRegion() is the imperative escape hatch for a back-to-top button. Either way both scroll models resolve themselves, so a document-scroll app needs no change.
+In a shell-scroll app the scroller is AppMain, so window.scrollTo(0, 0) does nothing and fails silently – follow a link from halfway down a page and you land halfway down the next one. In a Layout call useScrollReset(location.pathname, mainRef) beside useRouteFocus(location.pathname, mainRef), which focuses with preventScroll and leaves scrolling to this hook; the ref is a parameter because a Layout renders AppMain and so cannot read the context AppMain publishes. Below an AppMain omit the ref and the scroller comes from that context – which is what a page wants when it swaps content in place and passes its own key rather than a route. useScrollRegion() is the imperative escape hatch for a back-to-top button. Either way both scroll models resolve themselves, so a document-scroll app needs no change. useScrollMemory(key, ref?) remembers a view's offset and returns you to it, where useScrollReset always goes to the top: leaving a half-read tab and coming back should not lose your place, while a tab you have never opened has nothing remembered and starts at the top. Key it by whatever the app calls a view – a tab id is usually the right grain, and unique per page, so one call per page covers arriving at the page too. Three details make it work: the offset is recorded as you scroll rather than when you leave (an effect cleanup runs after the DOM has swapped and would read the incoming view's position), the scroller is resolved on every read (at arrival the content is often still loading, so an element that will overflow does not yet), and a restored offset is re-applied briefly while async content lands, ending the moment the user scrolls so it never fights them.
 
 #### useSwipeNavigation  `@whiskeyjack/use-swipe-navigation`
 
