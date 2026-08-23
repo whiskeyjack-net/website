@@ -1,0 +1,31 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-travel-direction",
+  "type": "registry:hook",
+  "title": "useTravelDirection",
+  "description": "Names which way a sliding indicator is travelling, so each of its edges can take its own easing.",
+  "categories": [
+    "hooks"
+  ],
+  "files": [
+    {
+      "path": "hooks/use-travel-direction.ts",
+      "type": "registry:hook",
+      "target": "hooks/use-travel-direction.ts",
+      "content": "import * as React from 'react'\n\n/**\n * Which way a sliding indicator is travelling, for the per-edge easing that\n * gives it its stretch (`.wj-segment-pill`, `.wj-nav-highlight`,\n * `.wj-toggle-knob` hardcodes its own pair because it has only two states).\n *\n * Derived from the item ORDER rather than the measured offset: the measurement\n * from `useSlidingIndicator` lands an effect later than the selection change,\n * so reading it would name the direction in the same commit that moves the\n * edges, or a commit too late. Adjusting state during render (React's\n * documented pattern) puts the value on the element one commit BEFORE the edges\n * move, which is what the transition needs.\n *\n * A ref here would be wrong -- StrictMode renders twice and the second pass\n * would compare the new index against itself.\n *\n * An index of -1 -- no selection, or an id that is not in the list -- is skipped\n * rather than recorded, so a selection that passes through nothing (a search\n * filtering every tab out and back) still travels from where it left.\n */\nexport function useTravelDirection(index: number): 'forward' | 'back' {\n  const [previous, setPrevious] = React.useState(index)\n  const [direction, setDirection] = React.useState<'forward' | 'back'>('forward')\n\n  if (index !== -1 && previous !== index) {\n    setDirection(index < previous ? 'back' : 'forward')\n    setPrevious(index)\n  }\n\n  return direction\n}\n"
+    }
+  ],
+  "docs": "Pair with useSlidingIndicator when an indicator is positioned by BOTH edges: the direction picks which edge leads, which is what gives the SegmentedControl pill and the HeaderNav / SidebarTabs highlights their stretch. Derived from the item order and adjusted during render, so the value is on the element one commit before the edges move -- reading the measured offset instead would name the direction a commit too late.",
+  "meta": {
+    "group": "hooks",
+    "related": [
+      "use-sliding-indicator",
+      "segmented-control",
+      "sidebar-tabs"
+    ],
+    "exports": [
+      "useTravelDirection"
+    ],
+    "siteSlug": "use-travel-direction"
+  }
+}

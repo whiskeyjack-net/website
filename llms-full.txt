@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (58)
+## Components, hooks and utilities (59)
 
 ### Navigation & layout
 
@@ -411,6 +411,14 @@ Measures the active item in a tab-like container so one element can animate betw
 Exports: `useSlidingIndicator`
 
 Shared by TabBar (underline), SegmentedControl (fill pill) and SidebarTabs (highlight), so the three cannot travel at different speeds. Pass axis 'y' for a vertical list. Returns null until a measurement lands, so render no indicator on the first paint rather than one at zero; a hidden container measures 0 and keeps its last good numbers instead of collapsing.
+
+#### useTravelDirection  `@whiskeyjack/use-travel-direction`
+
+Names which way a sliding indicator is travelling, so each of its edges can take its own easing.
+
+Exports: `useTravelDirection`
+
+Pair with useSlidingIndicator when an indicator is positioned by BOTH edges: the direction picks which edge leads, which is what gives the SegmentedControl pill and the HeaderNav / SidebarTabs highlights their stretch. Derived from the item order and adjusted during render, so the value is on the element one commit before the edges move -- reading the measured offset instead would name the direction a commit too late.
 
 #### useScrollIndicator  `@whiskeyjack/use-scroll-indicator`
 
