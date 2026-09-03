@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (59)
+## Components, hooks and utilities (60)
 
 ### Navigation & layout
 
@@ -250,11 +250,11 @@ Pair it with usePullToRefresh and feed it that hook's pullDistance and isRefresh
 
 #### Toast  `@whiskeyjack/toast`
 
-Floating notification pill fixed below the header, for app-level messages.
+Floating notification pill fixed below the header, for app-level messages and background work.
 
 Exports: `Toast`
 
-Toast is for app-level notifications that float above the page: an armed-state hint, an update-available message with an action. For a message bound to a specific surface, use Notice. The caller owns `open` and any auto-dismiss timing. Keep messages to one short sentence.
+Toast is for app-level notifications that float above the page: an armed-state hint, an update-available message with an action, or background work still running. For a message bound to a specific surface, use Notice. The caller owns `open` and any auto-dismiss timing. Keep messages to one short sentence. For work that resolves on its own, pass `busy` (draws the spinner, sets aria-busy) with a `detail` readout and no action or dismiss -- `detail` is hidden from assistive tech because the pill is a live region and a fast-changing count would otherwise be announced on every tick. `assertive` upgrades the announcement to role=alert for a message whose moment passes.
 
 ### Display
 
@@ -307,6 +307,14 @@ Retint the whole UI from one accent color, with a WCAG-legible foreground picked
 Exports: `applyAccentForeground`, `applyAccentColor`, `clearAccentColor`
 
 applyAccentColor derives a full --color-accent-* scale from a single hex and sets the matching foreground by WCAG luminance, so text on the accent stays legible at any hue. Pair it with ColorInput for a user-chosen accent, and call clearAccentColor to fall back to the token default.
+
+#### applyMaterialYou  `@whiskeyjack/material-you`
+
+Map Android's wallpaper-derived Material You palette onto the design-system surface and accent tokens.
+
+Exports: `MATERIAL_YOU_STOPS`, `isMaterialYouPalette`, `materialYouTokens`, `materialYouAccent`, `materialYouThemeColors`, `applyMaterialYou`, `clearMaterialYou`
+
+Android 12+ publishes five wallpaper-derived tonal ramps of 13 stops each; a native shell reads them and this maps them onto the DS tokens. Stops run light to dark (0 is white, 1000 is black), the opposite of the DS accent scale. The mapping keeps the surface ladder in order, re-points the neutral steps that are equal to a surface by construction, and leaves the page and edge chrome to the OLED overlay when extraDark is set. Pair materialYouAccent with applyAccentColor for the accent, and materialYouThemeColors with useTheme's themeColors so native chrome follows.
 
 #### announce  `@whiskeyjack/announce`
 
