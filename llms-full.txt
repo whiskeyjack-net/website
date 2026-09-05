@@ -374,11 +374,11 @@ Reach for this only when ONE instance of an expensive component has to move betw
 
 #### useRegisterNavReset  `@whiskeyjack/use-nav-reset`
 
-Double-tap the nav item for the page you are already on to return to the top, then to the page's start.
+Double-tap the nav item for the page you are already on to bring the top and the active tab back into view, then to go to the page's start.
 
-Exports: `useRegisterNavReset`, `NavResetProvider`, `NAV_DOUBLE_MS`
+Exports: `useRegisterNavReset`, `useRegisterNavReveal`, `NavResetProvider`, `NAV_DOUBLE_MS`
 
-Two steps, chosen by scroll position rather than by a second gesture in a time window, so the sequence is self-correcting: a double-tap while scrolled goes to the top, and one already at the top runs whatever the page registered as its start. Pass the AppMain ref as scrollRef to HeaderNav and MobileBottomNav – they are Layout chrome rendered alongside AppMain, so they sit above the scroll region it publishes and cannot read it, the same reason useScrollReset takes a ref. In a tabbed page call useRegisterNavReset(() => setActiveTab(first)), and pass null when there is nowhere further back to go so the second step stays inert. AppShell installs the provider; without one the gesture stops after the scroll step, which is what a page with no tabs wants.
+Two steps, chosen by what is out of place rather than by a second gesture in a time window, so the sequence is self-correcting: a double-tap with anything scrolled away returns the region to the top and brings every tab strip's active tab back into view in one motion, and one with everything in view runs whatever the page registered as its start. TabBar and SidebarTabs register their reveal step themselves; a custom strip calls useRegisterNavReveal with a check that scrolls and returns true only when the active tab was out of view. Pass the AppMain ref as scrollRef to HeaderNav and MobileBottomNav – they are Layout chrome rendered alongside AppMain, so they sit above the scroll region it publishes and cannot read it, the same reason useScrollReset takes a ref. In a tabbed page call useRegisterNavReset(() => setActiveTab(first)), and pass null when there is nowhere further back to go so the second step stays inert. AppShell installs the provider; without one the gesture stops after the scroll step, which is what a page with no tabs wants.
 
 #### usePullToRefresh  `@whiskeyjack/use-pull-to-refresh`
 

@@ -58,17 +58,23 @@
           // squares the window off. Android's UA also says "Linux", hence the
           // second test. useTheme re-checks this properly (paintRoot) and
           // clears the property if this ran too early to know.
+          //
+          // There the platform class goes on instead, so the stylesheet's
+          // FIRST paint already has a transparent body and a rounded #root.
+          // useSystemAccent adds the same class after mount; without it here
+          // the opaque `body` rule would fill the corners until React ran.
           var ua = navigator.userAgent;
           var linuxTauri = '__TAURI_INTERNALS__' in window &&
             ua.indexOf('Linux') !== -1 && !/android/i.test(ua);
-          if (!linuxTauri) el.style.backgroundColor = color;
+          if (linuxTauri) el.classList.add('tauri-platform-linux');
+          else el.style.backgroundColor = color;
           var m = document.querySelector('meta[name="theme-color"]');
           if (m) m.setAttribute('content', color);
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/chip-away/assets/index-DBpL3ciF.js"></script>
-    <link rel="stylesheet" crossorigin href="/chip-away/assets/index-D8t5ZARt.css">
+    <script type="module" crossorigin src="/chip-away/assets/index-DLzqrlko.js"></script>
+    <link rel="stylesheet" crossorigin href="/chip-away/assets/index-k5f78arH.css">
   <link rel="manifest" href="/chip-away/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/chip-away/registerSW.js"></script></head>
   <body>
     <script>!function(){var r=sessionStorage.getItem('spa-redirect');if(r){sessionStorage.removeItem('spa-redirect');history.replaceState(null,'',r)}}()</script>
