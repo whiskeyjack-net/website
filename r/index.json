@@ -250,6 +250,25 @@
       ]
     },
     {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "A single checkbox, with the mixed state a parent selection needs.",
+      "categories": [
+        "forms"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "components/ui/checkbox.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "color-input",
       "type": "registry:ui",
       "title": "ColorInput",
@@ -646,6 +665,25 @@
       "files": [
         {
           "path": "components/ui/tab-bar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Multi-line field with an optional character readout and auto-grow.",
+      "categories": [
+        "forms"
+      ],
+      "registryDependencies": [
+        "https://whiskeyjack.net/r/merge-refs.json",
+        "https://whiskeyjack.net/r/utils.json"
+      ],
+      "files": [
+        {
+          "path": "components/ui/textarea.tsx",
           "type": "registry:ui"
         }
       ]

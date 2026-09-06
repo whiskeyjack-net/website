@@ -22,7 +22,7 @@ npx shadcn@latest registry add @whiskeyjack=https://whiskeyjack.net/r/{name}.jso
 npx shadcn@latest add @whiskeyjack/<name>
 ```
 
-## Components, hooks and utilities (60)
+## Components, hooks and utilities (62)
 
 ### Navigation & layout
 
@@ -213,6 +213,22 @@ Search pill: a rounded-full text input with a leading magnifier and a trailing c
 Exports: `SearchField`
 
 Use this instead of hand-rolling the pill-with-magnifier-and-clear recipe. Controlled (value/onChange) and i18n-agnostic - pass translated label, clearLabel and placeholder; label is the accessible name, since a placeholder is not a label. Pass tabbable={shown} when a HeaderStandIn keeps it mounted but collapsed, so a zero-width field never catches Tab. size sm (h-9) sits flush in dense chrome; md (h-10) matches the control baseline - applies only to variant solid (the default). variant frosted is a floating blurred pill for a bar over scrolling content, always h-12 regardless of size.
+
+#### Textarea  `@whiskeyjack/textarea`
+
+Multi-line field with an optional character readout and auto-grow.
+
+Exports: `Textarea`, `counterTone`, `countCharacters`
+
+Input's shape and label behaviour for text that runs to more than one line. `limit` renders a `84 / 125` readout that shifts muted to warning at 90% and error past 100%, and deliberately leaves maxLength unset: a hard stop mid-word produces worse text than an overlong sentence. The readout is aria-hidden, because announcing a new number on every keystroke makes a field unusable with a screen reader, so pass `limitDescription` to state the target once through aria-describedby. `autoGrow` is off by default -- it is right for a field that owns its column and wrong inside a virtualised row, where every row must stay the same height. `counterTone` and `countCharacters` are exported so a count rendered elsewhere (a grid tile, a table row) matches the field instead of inventing a second set of thresholds.
+
+#### Checkbox  `@whiskeyjack/checkbox`
+
+A single checkbox, with the mixed state a parent selection needs.
+
+Exports: `Checkbox`
+
+A real input type=checkbox wearing the DS field shape. CheckboxGroup is a tile grid answering "which of these" and owns its own boxes; this is the one for a checkbox that stands alone -- a selectable row, a tile's selection affordance, a lone consent box -- and it is the only DS control carrying a mixed state, via `indeterminate` (a DOM property with no HTML attribute, so it is applied through the ref). Pass `label` to get a wrapping label element with the text inside the hit area, or supply your own aria-label. The box is 18px, below the 44px touch floor on purpose, because a dense grid of them would be unusable at 44px: a bare box in a touch context needs its hit area from the caller, gated on useInputType.
 
 ### Overlays & feedback
 
