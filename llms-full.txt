@@ -48,7 +48,7 @@ The app layout skeleton: a fixed-height shell or a document scroller, with a fro
 
 Exports: `AppShell`, `AppHeader`, `HeaderNav`, `AppMain`
 
-AppShell is the root. Use scroll="shell" for a fixed h-dvh column where only AppMain scrolls, or scroll="document" for a content site. AppHeader floats over the scrollers (variant="floating") or sits sticky in flow; a floating header means each scroller reserves md:pt-14 or md:pt-16 for its height. Tauri apps hang window controls off AppHeader's `chrome` slot.
+AppShell is the root. Use scroll="shell" for a fixed h-dvh column where only AppMain scrolls, or scroll="document" for a content site. AppHeader floats over the scrollers (variant="floating") or sits sticky in flow; a floating header means each scroller reserves md:pt-14 or md:pt-16 for its height. AppMain with scroll="self" is the scroller and carries overscroll-none itself; pass your own overscroll-* class to change it. Tauri apps hang window controls off AppHeader's `chrome` slot.
 
 #### BottomNav  `@whiskeyjack/bottom-nav`
 
