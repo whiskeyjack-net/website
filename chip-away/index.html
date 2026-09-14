@@ -52,29 +52,14 @@
           // without this the canvas stays the browser/webview default white
           // until the CSS lands. useTheme sets the same property on every
           // apply, so a later theme change keeps it in sync.
-          // NOT on Tauri Linux: that window is undecorated + transparent with
-          // CSS-only rounded corners, and the root's background propagates to
-          // the CANVAS -- painting it fills the corners with opaque color and
-          // squares the window off. Android's UA also says "Linux", hence the
-          // second test. useTheme re-checks this properly (paintRoot) and
-          // clears the property if this ran too early to know.
-          //
-          // There the platform class goes on instead, so the stylesheet's
-          // FIRST paint already has a transparent body and a rounded #root.
-          // useSystemAccent adds the same class after mount; without it here
-          // the opaque `body` rule would fill the corners until React ran.
-          var ua = navigator.userAgent;
-          var linuxTauri = '__TAURI_INTERNALS__' in window &&
-            ua.indexOf('Linux') !== -1 && !/android/i.test(ua);
-          if (linuxTauri) el.classList.add('tauri-platform-linux');
-          else el.style.backgroundColor = color;
+          el.style.backgroundColor = color;
           var m = document.querySelector('meta[name="theme-color"]');
           if (m) m.setAttribute('content', color);
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/chip-away/assets/index-NUOCVL8P.js"></script>
-    <link rel="stylesheet" crossorigin href="/chip-away/assets/index-DPsOW7Qx.css">
+    <script type="module" crossorigin src="/chip-away/assets/index-BUnVbT-4.js"></script>
+    <link rel="stylesheet" crossorigin href="/chip-away/assets/index-DJoL--xg.css">
   <link rel="manifest" href="/chip-away/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/chip-away/registerSW.js"></script></head>
   <body>
     <script>!function(){var r=sessionStorage.getItem('spa-redirect');if(r){sessionStorage.removeItem('spa-redirect');history.replaceState(null,'',r)}}()</script>
