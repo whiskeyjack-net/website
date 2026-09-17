@@ -110,11 +110,11 @@ Wrap side-by-side button pairs in ButtonRow instead of hand-rolling flex flex-wr
 
 #### ConfirmButton  `@whiskeyjack/confirm-button`
 
-Tap-again-to-confirm destructive button, with the armed state announced to assistive tech.
+Tap-again-to-confirm button for a destructive or disruptive action, with the armed state announced to assistive tech.
 
 Exports: `ConfirmButton`
 
-Use ConfirmButton for an inline destructive action where a modal would be heavy: delete a row, clear data, reset a setting. The first tap arms it and the second commits. Keep the confirm label explicit about what is about to happen. Pass controlled armed/onArmedChange when sibling actions must be mutually exclusive.
+Use ConfirmButton for an inline destructive action where a modal would be heavy: delete a row, clear data, reset a setting. The first tap arms it and the second commits. Keep the confirm label explicit about what is about to happen. Pass controlled armed/onArmedChange when sibling actions must be mutually exclusive. It is `destructive` by default; pass `variant` for an action that is disruptive rather than destructive -- signing out earns the same guard while red would overstate it. `label` takes a node, so a button that carried an icon keeps it.
 
 #### DisclosureToggle  `@whiskeyjack/disclosure-toggle`
 
@@ -152,11 +152,11 @@ Presentational and i18n-agnostic, so pass a translated aria-label. Use it for a 
 
 #### Input  `@whiskeyjack/input`
 
-Labeled text field that wires a real label to the input for you.
+Labeled text field that wires a real label to the input for you, with an optional hint, error and password reveal.
 
 Exports: `Input`
 
-Pass `label` and it renders a real label element tied to the input; otherwise supply your own aria-label. A placeholder is a hint, so keep the label for the field's name. Native input attributes are forwarded, so type, placeholder, and validation work as usual.
+Pass `label` and it renders a real label element tied to the input; otherwise supply your own aria-label. A placeholder is a hint, so keep the label for the field's name. Native input attributes are forwarded, so type, placeholder, and validation work as usual. `hint` adds supporting text below the field and `error` replaces it, marking the field aria-invalid and announcing through role=alert -- reach for `error` whenever a submit button greys out, so the reason is on screen rather than guessed at. On a `type="password"` field, passing BOTH `revealLabel` and `hideLabel` adds a show/hide toggle; it renders only when both are given, since an icon-only control with no accessible name is worse than no control.
 
 #### ReorderList  `@whiskeyjack/reorder-list`
 
