@@ -9,6 +9,7 @@
 
 - [Full component reference](https://whiskeyjack.net/llms-full.txt): every component and hook, with prose on which to reach for and what not to hand-roll. Generated from the same manifest that builds the registry, so it cannot drift from the code.
 - [Component gallery](https://whiskeyjack.net/components/): the same components as live, interactive demos.
+- [Design language](https://whiskeyjack.net/design-language/): the layout, surface, control, color, motion, accessibility and writing rules the components follow.
 - [shadcn registry catalog](https://whiskeyjack.net/r/registry.json): machine-readable index. Individual items are at `https://whiskeyjack.net/r/<name>.json` and resolve their own dependencies, so `npx shadcn add https://whiskeyjack.net/r/<name>.json` works without a namespace.
 
 ## Packages
