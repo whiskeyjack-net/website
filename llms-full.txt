@@ -288,7 +288,7 @@ GitHub-contributions-style activity heatmap, in squares or check-in dots.
 
 Exports: `CalendarHeatmap`
 
-Feed it contiguous daily cells (oldest first) and it lays them into a Monday-top week grid. The grid is fluid, so a long range shrinks to fit a mobile container rather than scrolling horizontally and fighting tab-swipe gestures. Presentational and i18n-agnostic: pass translated label, lessLabel, moreLabel, and monthLabels.
+Feed it contiguous daily cells (oldest first) and it lays them into a Monday-top week grid. The grid is fluid, so a long range shrinks to fit a mobile container rather than scrolling horizontally and fighting tab-swipe gestures. Presentational and i18n-agnostic: pass translated label, lessLabel, moreLabel, and monthLabels. markedDates draws chosen days in the error tone (the day a streak ended); pass markedLabel with it, which the legend shows beside a marked swatch and each marked cell shows on hover, and name the marked days in label for assistive tech.
 
 #### Card  `@whiskeyjack/card`
 
